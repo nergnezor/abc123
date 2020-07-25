@@ -1,0 +1,19 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+on:
+  push:
+#     branches: [ master ]
+  pull_request:
+#     branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Flutter action
+      uses: subosito/flutter-action@v1.3.2
+      with:
+        channel: 'beta'
+    - run: flutter build web  
