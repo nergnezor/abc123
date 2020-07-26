@@ -9,6 +9,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     return MaterialApp(
         theme: ThemeData(
           fontFamily: 'PressStart',
@@ -25,18 +29,20 @@ class ABC123 extends StatelessWidget {
       appBar: AppBar(
         title: Text('Best Learning Game Ever'),
       ),
-      body: Center(
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-              side: BorderSide(color: Colors.black)),
-          child: Text('Play The Fruit Game'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FindTheMatchingFruit()),
-            );
-          },
+      body: SafeArea(
+        child: Center(
+          child: RaisedButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.black)),
+            child: Text('Play The Fruit Game'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FindTheMatchingFruit()),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -50,15 +56,6 @@ class FindTheMatchingFruit extends StatefulWidget {
 }
 
 class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-  }
-
   /// Map to keep track of score
   final Map<String, bool> score = {};
 
@@ -69,7 +66,9 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
     '🍅': Colors.red,
     '🍇': Colors.purple,
     '🥥': Colors.brown,
-    '🥕': Colors.orange
+    '🥕': Colors.orange,
+    '💩': Colors.orange,
+    '👺': Colors.orange,
   };
 
   // Random seed to shuffle order of items.
@@ -79,7 +78,7 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Score ${score.length} / 6'),
+          title: Text('Score ${score.length} /' + choices.length.toString()),
           backgroundColor: Colors.pink),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.refresh),
@@ -90,28 +89,30 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
           });
         },
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Row(
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: choices.keys.map((emoji) {
+                  return Draggable<String>(
+                    data: emoji,
+                    child: Emoji(emoji: score[emoji] == true ? '✅' : emoji),
+                    feedback: Emoji(emoji: emoji),
+                    childWhenDragging: Emoji(emoji: '🌱'),
+                  );
+                }).toList()),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: choices.keys.map((emoji) {
-                return Draggable<String>(
-                  data: emoji,
-                  child: Emoji(emoji: score[emoji] == true ? '✅' : emoji),
-                  feedback: Emoji(emoji: emoji),
-                  childWhenDragging: Emoji(emoji: '🌱'),
-                );
-              }).toList()),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-                choices.keys.map((emoji) => _buildDragTarget(emoji)).toList()
-                  ..shuffle(Random(seed)),
-          )
-        ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:
+                  choices.keys.map((emoji) => _buildDragTarget(emoji)).toList()
+                    ..shuffle(Random(seed)),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -129,7 +130,7 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
       onAccept: (data) {
         setState(() {
           score[emoji] = true;
-          plyr.play('success.mp3');
+          plyr.play('audio/success.mp3');
         });
       },
       onLeave: (data) {},
