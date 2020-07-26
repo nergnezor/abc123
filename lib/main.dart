@@ -13,18 +13,43 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           fontFamily: 'PressStart',
         ),
-        home: ColorGame(),
+        home: ABC123(),
         debugShowCheckedModeBanner: false);
   }
 }
 
-class ColorGame extends StatefulWidget {
-  ColorGame({Key key}) : super(key: key);
-
-  createState() => ColorGameState();
+class ABC123 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Best Learning Game Ever'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+              side: BorderSide(color: Colors.black)),
+          child: Text('Play The Fruit Game'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FindTheMatchingFruit()),
+            );
+          },
+        ),
+      ),
+    );
+  }
 }
 
-class ColorGameState extends State<ColorGame> {
+class FindTheMatchingFruit extends StatefulWidget {
+  FindTheMatchingFruit({Key key}) : super(key: key);
+
+  createState() => FindTheMatchingFruitState();
+}
+
+class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   @override
   void initState() {
     super.initState();
