@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,11 +10,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'PressStart',
-      ),
-      home: ColorGame(),
-    );
+        theme: ThemeData(
+          fontFamily: 'PressStart',
+        ),
+        home: ColorGame(),
+        debugShowCheckedModeBanner: false);
   }
 }
 
@@ -24,6 +25,15 @@ class ColorGame extends StatefulWidget {
 }
 
 class ColorGameState extends State<ColorGame> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+  }
+
   /// Map to keep track of score
   final Map<String, bool> score = {};
 
@@ -55,10 +65,10 @@ class ColorGameState extends State<ColorGame> {
           });
         },
       ),
-      body: Row(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Column(
+          Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: choices.keys.map((emoji) {
@@ -69,7 +79,7 @@ class ColorGameState extends State<ColorGame> {
                   childWhenDragging: Emoji(emoji: '🌱'),
                 );
               }).toList()),
-          Column(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children:
