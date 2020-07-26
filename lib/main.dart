@@ -26,22 +26,31 @@ class ABC123 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text('Best Learning Game Ever'),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: RaisedButton(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.black)),
-            child: Text('Play The Fruit Game'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FindTheMatchingFruit()),
-              );
-            },
+      ),*/
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/StartScreenBackground.jpeg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: RaisedButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.black)),
+              child: Text('Play The Fruit Game'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FindTheMatchingFruit()),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -70,6 +79,12 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
     '💩': Colors.orange,
     '👺': Colors.orange,
   };
+
+  final fruitSuccessSounds = [
+    'audio/mmm-1.wav',
+    'audio/mmm-2.wav',
+    'audio/mmm-3.wav'
+  ];
 
   // Random seed to shuffle order of items.
   int seed = 0;
@@ -130,7 +145,8 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
       onAccept: (data) {
         setState(() {
           score[emoji] = true;
-          plyr.play('audio/success.mp3');
+          plyr.play(fruitSuccessSounds[
+              new Random().nextInt(fruitSuccessSounds.length)]);
         });
       },
       onLeave: (data) {},
