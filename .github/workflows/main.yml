@@ -35,6 +35,6 @@ jobs:
     - run: flutter build apk
 
     - uses: actions/upload-artifact@v1
-            with:
-              name: Build
-              path: build
+      with:
+        name: Build
+        path: build
