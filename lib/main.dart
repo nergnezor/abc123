@@ -84,17 +84,11 @@ class ColorGameState extends State<ColorGame> {
   Widget _buildDragTarget(emoji) {
     return DragTarget<String>(
       builder: (BuildContext context, List<String> incoming, List rejected) {
-        if (score[emoji] == true) {
-          return Container(
-            color: Colors.white,
-            child: Text('Correct!'),
-            alignment: Alignment.center,
-            height: 80,
-            width: 200,
-          );
-        } else {
-          return Container(color: choices[emoji], height: 80, width: 200);
-        }
+        return ColorFiltered(
+          child: Emoji(emoji: emoji),
+          colorFilter: ColorFilter.mode(Colors.grey,
+              score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
+        );
       },
       onWillAccept: (data) => data == emoji,
       onAccept: (data) {
