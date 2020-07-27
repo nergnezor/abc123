@@ -136,7 +136,7 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
     return DragTarget<String>(
       builder: (BuildContext context, List<String> incoming, List rejected) {
         try {
-          ColorFiltered(
+          return ColorFiltered(
             child: Emoji(emoji: emoji),
             colorFilter: ColorFilter.mode(Colors.grey,
                 score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
