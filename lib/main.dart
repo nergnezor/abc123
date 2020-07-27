@@ -135,7 +135,16 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   Widget _buildDragTarget(emoji) {
     return DragTarget<String>(
       builder: (BuildContext context, List<String> incoming, List rejected) {
-        return Container(color: choices[emoji], height: 70, width: 70);
+        try {
+          ColorFiltered(
+            child: Emoji(emoji: emoji),
+            colorFilter: ColorFilter.mode(Colors.grey,
+                score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
+          );
+        } catch (e) {
+          print("Error when applying ColorFilter " + e);
+          return Container(color: choices[emoji], height: 70, width: 70);
+        }
         // Emoji(emoji: emoji);
         /*ColorFiltered(
           child: Emoji(emoji: emoji),
