@@ -1,4 +1,5 @@
-import 'dart:html';
+// import 'dart:html';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -149,7 +150,16 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   Widget _buildDragTarget(emoji) {
     return DragTarget<String>(
       builder: (BuildContext context, List<String> incoming, List rejected) {
-        return Container(color: choices[emoji], height: 70, width: 70);
+        try {
+          if (Platform.isAndroid || Platform.isIOS)
+            return ColorFiltered(
+              child: Emoji(emoji: emoji),
+              colorFilter: ColorFilter.mode(Colors.grey,
+                  score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
+            );
+        } catch (e) {
+          return Container(color: choices[emoji], height: 70, width: 70);
+        }
         /*try {
           return ColorFiltered(
             child: Emoji(emoji: emoji),
@@ -160,11 +170,6 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
           print("Error when applying ColorFilter " + e);
           return Container(color: choices[emoji], height: 70, width: 70);
         }*/
-        /*ColorFiltered(
-          child: Emoji(emoji: emoji),
-          colorFilter: ColorFilter.mode(Colors.grey,
-              score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
-        );*/
       },
       onWillAccept: (data) => data == emoji,
       onAccept: (data) {
