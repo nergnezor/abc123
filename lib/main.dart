@@ -74,10 +74,10 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
     '🍋': Colors.yellow,
     '🍅': Colors.red,
     '🍇': Colors.purple,
-    '🥥': Colors.brown,
+    '🥥': Colors.brown[300],
     '🥕': Colors.orange,
-    '💩': Colors.orange,
-    '👺': Colors.orange,
+    '💩': Colors.brown,
+    '👺': Colors.red[400],
   };
 
   final fruitSuccessSounds = [
@@ -135,11 +135,13 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   Widget _buildDragTarget(emoji) {
     return DragTarget<String>(
       builder: (BuildContext context, List<String> incoming, List rejected) {
-        return ColorFiltered(
+        return Container(color: choices[emoji], height: 70, width: 70);
+        // Emoji(emoji: emoji);
+        /*ColorFiltered(
           child: Emoji(emoji: emoji),
           colorFilter: ColorFilter.mode(Colors.grey,
               score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
-        );
+        );*/
       },
       onWillAccept: (data) => data == emoji,
       onAccept: (data) {
