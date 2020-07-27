@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
@@ -64,21 +66,33 @@ class FindTheMatchingFruit extends StatefulWidget {
   createState() => FindTheMatchingFruitState();
 }
 
+Map getRandomEmojiList(int size, int startUnicode, int randomSeed) {
+  Map choices = {};
+  var random = new Random();
+  for (int i = 0; i < size; ++i) {
+    choices[String.fromCharCode(startUnicode + random.nextInt(randomSeed))] =
+        Colors.green;
+  }
+  return choices;
+}
+
 class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   /// Map to keep track of score
   final Map<String, bool> score = {};
 
   /// Choices for game
-  final Map choices = {
-    '🍏': Colors.green,
-    '🍋': Colors.yellow,
-    '🍅': Colors.red,
-    '🍇': Colors.purple,
-    '🥥': Colors.brown[300],
-    '🥕': Colors.orange,
-    '💩': Colors.brown,
-    '👺': Colors.red[400],
-  };
+  // final Map choices = {
+  //     final Map choices = {
+  //   '🍏': Colors.green,
+  //   '🍋': Colors.yellow,
+  //   '🍅': Colors.red,
+  //   '🍇': Colors.purple,
+  //   '🥥': Colors.brown[300],
+  //   '🥕': Colors.orange,
+  //   '💩': Colors.brown,
+  //   '👺': Colors.red[400],
+  // };
+  final Map choices = getRandomEmojiList(8, 0x1F400, 50);
 
   final fruitSuccessSounds = [
     'audio/mmm-1.wav',
