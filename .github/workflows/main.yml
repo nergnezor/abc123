@@ -76,4 +76,4 @@ jobs:
         token: ${{ secrets.DIAWI_TOKEN }} 
         file: Payload.ipa
 
-   - run: echo "check here:\n ${{ steps.diawi.outputs['url'] }}"
+    - run: echo "check here:\n ${{ steps.diawi.outputs['url'] }}"
