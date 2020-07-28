@@ -33,7 +33,13 @@ jobs:
       with:
         java-version: '12.x'
     - run: flutter build apk
-
+  
+    - name: Upload Diawi
+      uses: rnkdsh/action-upload-diawi@v1.1.0
+      with: 
+        # token: ${{ secrets.DIAWI_TOKEN }} 
+        file: build/app/outputs/flutter-apk/app-release.apk
+        password: 'razern'
     - uses: actions/upload-artifact@v1
       with:
         name: Build
