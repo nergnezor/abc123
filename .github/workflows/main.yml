@@ -68,12 +68,12 @@ jobs:
       id: diawi
       with:
         name: ipa
-        path: Payload.ipa
+        path: build/ios/iphoneos/Runner.app #Payload.ipa
 
     - name: Upload Diawi
       uses: rnkdsh/action-upload-diawi@v1.1.0
       with: 
         token: ${{ secrets.DIAWI_TOKEN }} 
-        file: Payload.ipa
+        file: build/ios/iphoneos/Runner.app #Payload.ipa
 
     - run: echo "check here:\n ${{ steps.diawi.outputs['url'] }}"
