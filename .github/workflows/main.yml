@@ -63,13 +63,17 @@ jobs:
         mv ./build/ios/iphoneos/Runner.app Payload 
         zip -r -y Payload.zip Payload/Runner.app 
         mv Payload.zip Payload.ipa
+
+    - uses: actions/upload-artifact@v1
+      id: diawi
+      with:
+        name: ipa
+        path: Payload.ipa
+
     - name: Upload Diawi
       uses: rnkdsh/action-upload-diawi@v1.1.0
       with: 
         token: ${{ secrets.DIAWI_TOKEN }} 
         file: Payload.ipa
 
-    - uses: actions/upload-artifact@v1
-      with:
-        name: ipa
-        path: Payload.ipa
+   - run: echo "check here:\n ${{ steps.diawi.outputs['url'] }}"
