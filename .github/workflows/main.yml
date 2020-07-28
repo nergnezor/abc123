@@ -39,7 +39,7 @@ jobs:
       with: 
         token: ${{ secrets.DIAWI_TOKEN }} 
         file: build/app/outputs/flutter-apk/app-release.apk
-        password: 'razern'
+        #password: 'razern'
     - uses: actions/upload-artifact@v1
       with:
         name: Build
