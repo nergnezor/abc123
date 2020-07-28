@@ -9,7 +9,7 @@ on:
 #     branches: [ master ]
 
 jobs:
-  build:
+  buildAndroidAndWeb:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -17,7 +17,7 @@ jobs:
     - name: Flutter action
       uses: subosito/flutter-action@v1.3.2
       with:
-        channel: 'dev'
+        channel: 'beta'
     - run: flutter config --enable-web
     - run: flutter build web
 
@@ -44,3 +44,21 @@ jobs:
       with:
         name: Build
         path: build/app/outputs/flutter-apk/app-release.apk
+        
+  buildIos:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Flutter action
+      uses: subosito/flutter-action@v1.3.2
+      with:
+        channel: 'beta'
+
+    - run: flutter build ios --release --no-codesign
+
+    - name: Upload Diawi
+      uses: rnkdsh/action-upload-diawi@v1.1.0
+      with: 
+        token: ${{ secrets.DIAWI_TOKEN }} 
+        file: build/app/outputs/flutter-apk/app-release.apk
