@@ -46,16 +46,16 @@ jobs:
         path: build/app/outputs/flutter-apk/app-release.apk
 
   buildIos:
-    runs-on: macOS-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
 
     - name: Flutter action
       uses: subosito/flutter-action@v1.3.2
       with:
-        channel: 'beta'
+        channel: 'dev'
 
-    - run: flutter build ios --debug --no-codesign
+    - run: flutter build ios #--debug --no-codesign
 
     - name: make folder, add .app then zip it and rename it to .ipa 
       run: |
@@ -68,12 +68,12 @@ jobs:
       id: diawi
       with:
         name: ipa
-        path: build/ios/iphoneos/Runner.app #Payload.ipa
+        path: Payload.ipa
 
     - name: Upload Diawi
       uses: rnkdsh/action-upload-diawi@v1.1.0
       with: 
         token: ${{ secrets.DIAWI_TOKEN }} 
-        file: build/ios/iphoneos/Runner.app #Payload.ipa
+        file: Payload.ipa
 
     - run: echo "check here:\n ${{ steps.diawi.outputs['url'] }}"
