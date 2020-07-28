@@ -11,10 +11,13 @@ class FindTheMatchingFruit extends StatefulWidget {
 
 Map getRandomEmojiList(int size, int startUnicode, int randomSeed) {
   Map choices = {};
+  if (randomSeed < size) randomSeed = size;
   var random = new Random();
   for (int i = 0; i < size; ++i) {
-    choices[String.fromCharCode(startUnicode + random.nextInt(randomSeed))] =
-        Colors.green;
+    var emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
+    while (choices.containsKey(emoji))
+      emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
+    choices[emoji] = Colors.green;
   }
   return choices;
 }
@@ -35,7 +38,7 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   //   '💩': Colors.brown,
   //   '👺': Colors.red[400],
   // };
-  final Map choices = getRandomEmojiList(8, 0x1F400, 50);
+  final Map choices = getRandomEmojiList(7, 0x1F400, 60);
 
   final fruitSuccessSounds = [
     'audio/mmm-1.wav',
@@ -50,8 +53,8 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Score ${score.length} /' + choices.length.toString()),
-          backgroundColor: Colors.pink),
+        title: Text('Score ${score.length} /' + choices.length.toString()),
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.refresh),
         onPressed: () {
@@ -61,6 +64,7 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
           });
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -100,18 +104,8 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
                   score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
             );
         } catch (e) {
-          return Container(color: choices[emoji], height: 70, width: 70);
+          return Container(color: choices[emoji], height: 100, width: 100);
         }
-        /*try {
-          return ColorFiltered(
-            child: Emoji(emoji: emoji),
-            colorFilter: ColorFilter.mode(Colors.grey,
-                score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
-          );
-        } catch (e) {
-          print("Error when applying ColorFilter " + e);
-          return Container(color: choices[emoji], height: 70, width: 70);
-        }*/
       },
       onWillAccept: (data) => data == emoji,
       onAccept: (data) {
@@ -137,11 +131,11 @@ class Emoji extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         alignment: Alignment.center,
-        height: 80,
+        height: 120,
         padding: EdgeInsets.all(10),
         child: Text(
           emoji,
-          style: TextStyle(color: Colors.black, fontSize: 50),
+          style: TextStyle(color: Colors.black, fontSize: 100),
         ),
       ),
     );

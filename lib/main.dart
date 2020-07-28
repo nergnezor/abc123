@@ -14,9 +14,10 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
         theme: ThemeData(
-          fontFamily: 'PressStart',
+          primarySwatch: Colors.blueGrey,
         ),
         home: ABC123(),
+        // home: FindTheMatchingFruit(),
         debugShowCheckedModeBanner: false);
   }
 }
@@ -38,10 +39,13 @@ class ABC123 extends StatelessWidget {
         child: SafeArea(
           child: Center(
             child: RaisedButton(
+              color: Colors.transparent,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.black)),
-              child: Text('Play The Fruit Game'),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Text('Play The Fruit Game',
+                  style: TextStyle(fontSize: 25, color: Colors.white)),
               onPressed: () {
                 Navigator.push(
                   context,
