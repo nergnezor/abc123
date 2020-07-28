@@ -42,9 +42,9 @@ jobs:
         #password: 'razern'
     - uses: actions/upload-artifact@v1
       with:
-        name: Build
+        name: apk
         path: build/app/outputs/flutter-apk/app-release.apk
-        
+
   buildIos:
     runs-on: macOS-latest
     steps:
@@ -68,3 +68,8 @@ jobs:
       with: 
         token: ${{ secrets.DIAWI_TOKEN }} 
         file: Payload.ipa
+
+    - uses: actions/upload-artifact@v1
+      with:
+        name: ipa
+        path: Payload.ipa
