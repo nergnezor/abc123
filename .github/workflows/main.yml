@@ -55,7 +55,7 @@ jobs:
       with:
         channel: 'beta'
 
-    - run: flutter build ios --release --no-codesign
+    - run: flutter build ios --debug --no-codesign
 
     - name: make folder, add .app then zip it and rename it to .ipa 
       run: |
