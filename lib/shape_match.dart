@@ -131,11 +131,11 @@ class Emoji extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         alignment: Alignment.center,
-        height: 120,
+        height: 80,
         padding: EdgeInsets.all(10),
         child: Text(
           emoji,
-          style: TextStyle(color: Colors.black, fontSize: 100),
+          style: TextStyle(color: Colors.black, fontSize: 60),
         ),
       ),
     );
