@@ -55,7 +55,7 @@ jobs:
       with:
         channel: 'beta'
 
-    - run: flutter build ios --profile --no-codesign --obfuscate --split-debug-info #--debug
+    - run: flutter build ios --profile --no-codesign --split-debug-info=some_parent_directory/some_child_directory #--debug
 
     - name: make folder, add .app then zip it and rename it to .ipa 
       run: |
