@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'shape_match.dart';
-import 'letters.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,7 +54,8 @@ class ABC123 extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FindTheMatchingFruit()),
+                          builder: (context) =>
+                              FindTheMatchingFruit(MatchWith.emoji)),
                     );
                   },
                 ),
@@ -74,7 +74,9 @@ class ABC123 extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Letters()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              FindTheMatchingFruit(MatchWith.letters)),
                     );
                   },
                 ),

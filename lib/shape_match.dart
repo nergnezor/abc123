@@ -2,43 +2,36 @@ import 'dart:math';
 import 'dart:io' show Platform;
 import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
+import 'letters.dart';
 
 class FindTheMatchingFruit extends StatefulWidget {
-  FindTheMatchingFruit({Key key}) : super(key: key);
-
-  createState() => FindTheMatchingFruitState();
+  final MatchWith m;
+  const FindTheMatchingFruit(this.m, {Key key}) : super(key: key);
+  @override
+  FindTheMatchingFruitState createState() => FindTheMatchingFruitState();
 }
 
-Map getRandomEmojiList(int size, int startUnicode, int randomSeed) {
-  Map choices = {};
+List<int> getRandomEmojiList(int size, int startUnicode, int randomSeed) {
+  List<int> choices = new List();
   if (randomSeed < size) randomSeed = size;
   var random = new Random();
   for (int i = 0; i < size; ++i) {
-    var emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
-    while (choices.containsKey(emoji))
-      emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
-    choices[emoji] = Colors.green;
+    //   var emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
+    //   while (choices.containsKey(emoji))
+    //     emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
+    //   choices[emoji] = Colors.green;
+    choices.add(random.nextInt(randomSeed));
   }
   return choices;
 }
 
+enum MatchWith { emoji, letters }
+
 class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   /// Map to keep track of score
   final Map<String, bool> score = {};
-
-  /// Choices for game
-  // final Map choices = {
-  //     final Map choices = {
-  //   '🍏': Colors.green,
-  //   '🍋': Colors.yellow,
-  //   '🍅': Colors.red,
-  //   '🍇': Colors.purple,
-  //   '🥥': Colors.brown[300],
-  //   '🥕': Colors.orange,
-  //   '💩': Colors.brown,
-  //   '👺': Colors.red[400],
-  // };
-  final Map choices = getRandomEmojiList(7, 0x1F400, 60);
+  final int startUnicode = 0x1F400;
+  final List<int> choices = getRandomEmojiList(7, 0x1F400, 60);
 
   final fruitSuccessSounds = [
     'audio/mmm-1.wav',
@@ -72,20 +65,21 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: choices.keys.map((emoji) {
+                children: choices.map((i) {
                   return Draggable<String>(
-                    data: emoji,
-                    child: Emoji(emoji: score[emoji] == true ? '✅' : emoji),
-                    feedback: Emoji(emoji: emoji),
-                    childWhenDragging: Emoji(emoji: '🌱'),
+                    data: getCharacter(i),
+                    child:
+                        Emoji(emoji: score[i] == true ? '✅' : getCharacter(i)),
+                    feedback: Emoji(emoji: getCharacter(i)),
+                    childWhenDragging:
+                        Emoji(emoji: widget.m == MatchWith.emoji ? '🌱' : 'A'),
                   );
                 }).toList()),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:
-                  choices.keys.map((emoji) => _buildDragTarget(emoji)).toList()
-                    ..shuffle(Random(seed)),
+              children: choices.map((emoji) => _buildDragTarget(emoji)).toList()
+                ..shuffle(Random(seed)),
             )
           ],
         ),
@@ -93,24 +87,28 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
     );
   }
 
-  Widget _buildDragTarget(emoji) {
+  String getCharacter(int i) => widget.m == MatchWith.emoji
+      ? String.fromCharCode(startUnicode + i)
+      : alphabet[i % alphabet.length];
+
+  Widget _buildDragTarget(i) {
     return DragTarget<String>(
       builder: (BuildContext context, List<String> incoming, List rejected) {
         try {
           if (Platform.isAndroid || Platform.isIOS)
             return ColorFiltered(
-              child: Emoji(emoji: emoji),
+              child: Emoji(emoji: getCharacter(i)),
               colorFilter: ColorFilter.mode(Colors.grey,
-                  score[emoji] == true ? BlendMode.clear : BlendMode.srcIn),
+                  score[i] == true ? BlendMode.clear : BlendMode.srcIn),
             );
         } catch (e) {
-          return Container(color: choices[emoji], height: 100, width: 100);
+          return Container(color: Colors.grey, height: 100, width: 100);
         }
       },
-      onWillAccept: (data) => data == emoji,
+      onWillAccept: (data) => data == i,
       onAccept: (data) {
         setState(() {
-          score[emoji] = true;
+          score[i] = true;
           plyr.play(fruitSuccessSounds[
               new Random().nextInt(fruitSuccessSounds.length)]);
         });
