@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'shape_match.dart';
+import 'letters.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,23 +39,48 @@ class ABC123 extends StatelessWidget {
         ),
         child: SafeArea(
           child: Center(
-            child: RaisedButton(
-              color: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Card(
+                child: RaisedButton(
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Text('Play The Fruit Game',
+                      style: TextStyle(fontSize: 25, color: Colors.white)),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FindTheMatchingFruit()),
+                    );
+                  },
+                ),
               ),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Text('Play The Fruit Game',
-                  style: TextStyle(fontSize: 25, color: Colors.white)),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FindTheMatchingFruit()),
-                );
-              },
-            ),
-          ),
+              Card(
+                child: RaisedButton(
+                  // color: Colors.transparent,
+                  // shape: RoundedRectangleBorder(
+                  //   borderRadius: BorderRadius.circular(100),
+                  // ),
+                  // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Text(
+                    'ABC',
+                  ),
+                  // style: TextStyle(fontSize: 25, color: Colors.white)),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Letters()),
+                    );
+                  },
+                ),
+              )
+            ],
+          )),
         ),
       ),
     );
