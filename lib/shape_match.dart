@@ -29,9 +29,10 @@ enum MatchWith { emoji, letters }
 
 class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
   /// Map to keep track of score
-  final Map<String, bool> score = {};
+  // final Map<String, bool> score = {};
   final int startUnicode = 0x1F400;
   final List<int> choices = getRandomEmojiList(7, 0x1F400, 60);
+  final Map<int, bool> score = {};
 
   final fruitSuccessSounds = [
     'audio/mmm-1.wav',
@@ -72,13 +73,13 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
                         Emoji(emoji: score[i] == true ? '✅' : getCharacter(i)),
                     feedback: Emoji(emoji: getCharacter(i)),
                     childWhenDragging:
-                        Emoji(emoji: widget.m == MatchWith.emoji ? '🌱' : 'A'),
+                        Emoji(emoji: widget.m == MatchWith.emoji ? '🌱' : ' '),
                   );
                 }).toList()),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: choices.map((emoji) => _buildDragTarget(emoji)).toList()
+              children: choices.map((i) => _buildDragTarget(i)).toList()
                 ..shuffle(Random(seed)),
             )
           ],
@@ -89,7 +90,7 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
 
   String getCharacter(int i) => widget.m == MatchWith.emoji
       ? String.fromCharCode(startUnicode + i)
-      : alphabet[i % alphabet.length];
+      : alphabetLetter(i % alphabetLength());
 
   Widget _buildDragTarget(i) {
     return DragTarget<String>(
@@ -101,11 +102,10 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
               colorFilter: ColorFilter.mode(Colors.grey,
                   score[i] == true ? BlendMode.clear : BlendMode.srcIn),
             );
-        } catch (e) {
-          return Container(color: Colors.grey, height: 100, width: 100);
-        }
+        } catch (e) {}
+        return Container(color: Colors.grey, height: 80, width: 80);
       },
-      onWillAccept: (data) => data == i,
+      onWillAccept: (data) => data == getCharacter(i),
       onAccept: (data) {
         setState(() {
           score[i] = true;
@@ -129,7 +129,7 @@ class Emoji extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         alignment: Alignment.center,
-        height: 80,
+        // height: 80,
         padding: EdgeInsets.all(10),
         child: Text(
           emoji,
