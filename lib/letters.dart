@@ -23,10 +23,14 @@ class _LettersState extends State<Letters> {
     initTts();
   }
 
-  initTts() {
+  initTts() async {
     flutterTts = FlutterTts();
 
     _getLanguages();
+
+    //flutterTts.setLanguage(language)
+
+    await flutterTts.setLanguage("sv");
 
     if (!kIsWeb) {
       if (Platform.isAndroid) {
@@ -50,7 +54,7 @@ class _LettersState extends State<Letters> {
   }
 
   Future _speak(index) async {
-    var result = await flutterTts.speak(alphabetLetter(index));
+    var result = await flutterTts.speak(alphabetLetter(index).toLowerCase());
     if (result == 1) setState(() => ttsState = TtsState.playing);
   }
 
