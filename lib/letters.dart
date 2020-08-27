@@ -62,20 +62,30 @@ class _LettersState extends State<Letters> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: GridView.count(
-        crossAxisCount: 10,
-        children: List.generate(alphabetLength(), (i) {
-          return GestureDetector(
-            child: Center(
-                child: Text(alphabetLetter(i),
-                    style: TextStyle(
-                        fontSize: 80,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.accents[
-                            Random().nextInt(Colors.accents.length)]))),
-            onTap: () => _speak(i),
-          );
-        }),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/StartScreenBackground.jpeg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: GridView.count(
+            crossAxisCount: 9,
+            children: List.generate(alphabetLength(), (i) {
+              return GestureDetector(
+                child: Center(
+                    child: Text(alphabetLetter(i),
+                        style: TextStyle(
+                            fontSize: 80,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.accents[
+                                Random().nextInt(Colors.accents.length)]))),
+                onTap: () => _speak(i),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }

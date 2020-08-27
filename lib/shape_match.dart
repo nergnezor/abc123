@@ -59,30 +59,38 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/LandscapeBackground.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: choices.map((i) {
+                    return Draggable<String>(
+                      data: getCharacter(i),
+                      child: Emoji(
+                          emoji: score[i] == true ? '✅' : getCharacter(i)),
+                      feedback: Emoji(emoji: getCharacter(i)),
+                      childWhenDragging: Emoji(
+                          emoji: widget.m == MatchWith.emoji ? '🌱' : ' '),
+                    );
+                  }).toList()),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: choices.map((i) {
-                  return Draggable<String>(
-                    data: getCharacter(i),
-                    child:
-                        Emoji(emoji: score[i] == true ? '✅' : getCharacter(i)),
-                    feedback: Emoji(emoji: getCharacter(i)),
-                    childWhenDragging:
-                        Emoji(emoji: widget.m == MatchWith.emoji ? '🌱' : ' '),
-                  );
-                }).toList()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: choices.map((i) => _buildDragTarget(i)).toList()
-                ..shuffle(Random(seed)),
-            )
-          ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: choices.map((i) => _buildDragTarget(i)).toList()
+                  ..shuffle(Random(seed)),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -99,7 +107,7 @@ class FindTheMatchingFruitState extends State<FindTheMatchingFruit> {
           if (Platform.isAndroid || Platform.isIOS)
             return ColorFiltered(
               child: Emoji(emoji: getCharacter(i)),
-              colorFilter: ColorFilter.mode(Colors.grey,
+              colorFilter: ColorFilter.mode(Colors.black,
                   score[i] == true ? BlendMode.clear : BlendMode.srcIn),
             );
         } catch (e) {}
