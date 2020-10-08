@@ -1,13 +1,14 @@
-import 'dart:ffi';
+//import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'shape_match.dart';
-import 'letters.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'Tts.dart';
 
 void main() => runApp(MyApp());
+//void main() => runApp(MyHomePage());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -88,12 +89,25 @@ class ABC123 extends StatelessWidget {
               child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              modeButton(context, FindTheMatchingFruit(MatchWith.emoji),
-                  'Match emojis'),
-              modeButton(context, FindTheMatchingFruit(MatchWith.letters),
-                  'Match letters'),
-              modeButton(context, Letters(), 'Speaking letters'),
-              menuButton(context, "Toggle Music"),
+              //modeButton(context, FindTheMatchingFruit(MatchWith.emoji),
+              //    'Match emojis'),
+              //modeButton(context, FindTheMatchingFruit(MatchWith.letters),
+              //'Match letters'),
+              //modeButton(context, Letters(), 'Speaking letters'),
+              //menuButton(context, "Toggle Music"),
+              Container(
+                padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
+                clipBehavior: Clip.none,
+                height: 300,
+                width: 300,
+                child: FlareActor(
+                  "assets/animations/Robbo.flr",
+                  alignment: Alignment.center,
+                  fit: BoxFit.fitWidth,
+                  animation: "Wave",
+                  color: null,
+                ),
+              )
             ],
           )),
         ),
@@ -103,11 +117,36 @@ class ABC123 extends StatelessWidget {
 }
 
 initMusic() async {
-  AudioPlayer.logEnabled = true;
-  advancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.25);
+  //AudioPlayer.logEnabled = true;
+  advancedPlayer.release();
+  advancedPlayer.stop();
+  plyr.clearCache();
+
+  //plyr.clear('audio/backgorundMusic.mp3');
+  if (isBackgroundMusicPlaying) return;
+  advancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.1);
   isBackgroundMusicPlaying = true;
+  Tts.speak("Hej! Jag heter Robotta. Mats är bög. Hej då");
 }
 
 bool isBackgroundMusicPlaying = false;
 AudioPlayer advancedPlayer = AudioPlayer();
 AudioCache plyr = AudioCache(fixedPlayer: advancedPlayer);
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => new _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return new FlareActor(
+      "assets/animations/Robbo.flr",
+      alignment: Alignment.center,
+      fit: BoxFit.fitWidth,
+      animation: "Wave",
+      color: null,
+    );
+  }
+}
