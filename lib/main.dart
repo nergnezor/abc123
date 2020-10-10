@@ -70,7 +70,7 @@ Padding menuButton(context, String s) {
 
 class ABC123 extends StatelessWidget {
   ABC123() {
-    initMusic();
+    //initMusic();
 
     //plyr.play('audio/backgorundMusic.mp3');
   }
@@ -126,7 +126,7 @@ initMusic() async {
   if (isBackgroundMusicPlaying) return;
   advancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.1);
   isBackgroundMusicPlaying = true;
-  Tts.speak("Hej! Jag heter Robotta. Mats är bög. Hej då");
+  Tts.speak("Next! Find the cat");
 }
 
 bool isBackgroundMusicPlaying = false;
@@ -139,14 +139,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  FlareActor character = new FlareActor(
+    "assets/animations/Robbo.flr",
+    alignment: Alignment.center,
+    fit: BoxFit.fitWidth,
+    animation: "Wave",
+    color: null,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return new FlareActor(
-      "assets/animations/Robbo.flr",
-      alignment: Alignment.center,
-      fit: BoxFit.fitWidth,
-      animation: "Wave",
-      color: null,
-    );
+    //character.alignment
+    return character;
   }
 }
