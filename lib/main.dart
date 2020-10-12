@@ -6,6 +6,7 @@ import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'Tts.dart';
+import 'FindAlike.dart';
 
 void main() => runApp(MyApp());
 //void main() => runApp(MyHomePage());
@@ -93,10 +94,10 @@ class ABC123 extends StatelessWidget {
               //    'Match emojis'),
               //modeButton(context, FindTheMatchingFruit(MatchWith.letters),
               //'Match letters'),
-              //modeButton(context, Letters(), 'Speaking letters'),
+              modeButton(context, FindALike(), 'Find A Like'),
               //menuButton(context, "Toggle Music"),
               Container(
-                padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 clipBehavior: Clip.none,
                 height: 300,
                 width: 300,
