@@ -6,12 +6,17 @@ import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'Tts.dart';
+import 'svgs.dart';
 import 'FindAlike.dart';
 
 void main() => runApp(MyApp());
 //void main() => runApp(MyHomePage());
 
 class MyApp extends StatelessWidget {
+  MyApp() {
+    Tts tts = Tts();
+    SVGs svgs = SVGs();
+  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -71,7 +76,7 @@ Padding menuButton(context, String s) {
 
 class ABC123 extends StatelessWidget {
   ABC123() {
-    //initMusic();
+    initMusic();
 
     //plyr.play('audio/backgorundMusic.mp3');
   }
@@ -99,8 +104,8 @@ class ABC123 extends StatelessWidget {
               Container(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 clipBehavior: Clip.none,
-                height: 300,
-                width: 300,
+                height: 250,
+                width: 250,
                 child: FlareActor(
                   "assets/animations/Robbo.flr",
                   alignment: Alignment.center,
@@ -124,8 +129,8 @@ initMusic() async {
   plyr.clearCache();
 
   //plyr.clear('audio/backgorundMusic.mp3');
-  if (isBackgroundMusicPlaying) return;
-  advancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.1);
+  //if (isBackgroundMusicPlaying) return;
+  //advancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.1);
   isBackgroundMusicPlaying = true;
   Tts.speak("Next! Find the cat");
 }

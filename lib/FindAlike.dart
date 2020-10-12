@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:io' show Platform;
 import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
+import 'svgs.dart';
 
 class FindALike extends StatefulWidget {
   //final MatchWith m;
@@ -75,10 +76,11 @@ class FindALikeState extends State<FindALike> {
   // Random seed to shuffle order of items.
   int seed = 0;
 
-  @override
+  /*@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue[300],
         title: Text('Score ${score.length} /' + targetObject.length.toString()),
       ),
       floatingActionButton: FloatingActionButton(
@@ -120,7 +122,7 @@ class FindALikeState extends State<FindALike> {
                       ),
                     );
                   }).toList()),
-              SizedBox(
+              /*SizedBox(
                 width: 450,
                 height: 450,
                 child: FittedBox(
@@ -139,11 +141,46 @@ class FindALikeState extends State<FindALike> {
                     ,
                   ),
                 ),
-              )
+              )*/
             ],
           ),
         ),
       ),
+    );
+  }*/
+  var _dimension = 800.0;
+  @override
+  Widget build(BuildContext context) {
+    if (_dimension > MediaQuery.of(context).size.width - 10.0) {
+      _dimension = MediaQuery.of(context).size.width - 10.0;
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("SVGS"),
+      ),
+      body: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Slider(
+                min: 5.0,
+                max: MediaQuery.of(context).size.width - 10.0,
+                value: _dimension,
+                onChanged: (double val) {
+                  setState(() => _dimension = val);
+                }),
+            Expanded(
+              child: GridView.extent(
+                shrinkWrap: true,
+                maxCrossAxisExtent: _dimension,
+                padding: const EdgeInsets.all(4.0),
+                mainAxisSpacing: 4.0,
+                crossAxisSpacing: 4.0,
+                children: SVGs.painters.toList(),
+                childAspectRatio: 1.0,
+              ),
+            ),
+          ]),
     );
   }
 
