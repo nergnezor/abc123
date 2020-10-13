@@ -4,12 +4,13 @@ import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'Tts.dart';
 import 'package:abc2/GameObjectFactory.dart';
+import 'size_config.dart';
 
 List<GameObject> localGameList = GameObjectFactory.buildAnimalsList();
 
 int numberOfTargets = 1;
-int numberOfChoices = 4;
-int numberObjectsOnRow = 4;
+int numberOfChoices = 6;
+int numberObjectsOnRow = 0;
 
 class FindTheSame extends StatefulWidget {
   //final MatchWith m;
@@ -31,6 +32,7 @@ List<GameObject> getTargetGameObjectList(int size, int randomSeed) {
 
 List<GameObject> getRandomGameObjectsList(int size, int randomSeed) {
   List<GameObject> choices = new List();
+  if (size > randomSeed) size = randomSeed;
   choices.addAll(targetObject);
 
   var random = new Random();
@@ -41,7 +43,7 @@ List<GameObject> getRandomGameObjectsList(int size, int randomSeed) {
     }
   }
 
-  return choices;
+  return choices..shuffle(Random(randomSeed));
 }
 
 enum MatchWith { emoji, letters }
@@ -109,26 +111,16 @@ class FindTheSameState extends State<FindTheSame> {
         ),
         child: SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                  child:
-                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      // crossAxisAlignment: CrossAxisAlignment.end,
-                      // children: targetObject.map((i) {
-                      //SVGs.painters[0]),
-                      targetObject[0].flare),
-              // }).toList()),
-
-              Expanded(
-                child: GridView.count(
-                  shrinkWrap: false,
-                  crossAxisCount: ((numberOfChoices % numberObjectsOnRow) +
-                      numberObjectsOnRow),
-                  //maxCrossAxisExtent: _dimension,
-                  padding: const EdgeInsets.all(4.0),
-                  mainAxisSpacing: 4.0,
-                  crossAxisSpacing: 4.0,
+              SizedBox(
+                  height: 40 * SizeConfig.blockSizeVertical,
+                  width: SizeConfig.screenWidth,
+                  child: targetObject[0].flare),
+              Container(
+                padding: EdgeInsets.fromLTRB((SizeConfig.screenWidth / 80), 0,
+                    SizeConfig.screenWidth / 80, 0),
+                child: Wrap(
                   children: //[choices[0].flare],
                       List.generate(numberOfChoices, (index) {
                     return GestureDetector(
@@ -136,7 +128,7 @@ class FindTheSameState extends State<FindTheSame> {
                         print(choices[index].name);
                         // if (choices[index].answered) return;
                         if (choices[index].name == targetObject[0].name) {
-                          choices[index].answered = true;
+                          //choices[index].answered = true;
                           rightChoices++;
                           Tts.speak(
                               "Bra! Det är ${choices[index].spokenName}.");
@@ -152,15 +144,23 @@ class FindTheSameState extends State<FindTheSame> {
                         }
                       },
                       child: Container(
-                        child: choices[index].flare,
+                        child: SizedBox(
+                          height: 15 * SizeConfig.blockSizeVertical,
+                          width: SizeConfig.screenWidth / (numberOfChoices) -
+                              (SizeConfig.screenWidth / (20 * numberOfChoices)),
+                          child: Card(
+                            elevation: 5.0,
+                            color: choices[index].color,
+                            child: choices[index].flare,
+                          ),
+                        ),
                       ),
                     );
                   })
-                        ..shuffle(Random(seed++)), //[choices[0].flare],
-                  childAspectRatio: 1.0,
+                  /*..shuffle(Random(seed))*/, //[choices[0].flare],
                 ),
-              ),
-              /*SizedBox(
+
+                /*SizedBox(
                 width: 450,
                 height: 450,
                 child: FittedBox(
@@ -180,6 +180,7 @@ class FindTheSameState extends State<FindTheSame> {
                   ),
                 ),
               )*/
+              )
             ],
           ),
         ),

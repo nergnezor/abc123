@@ -20,7 +20,7 @@ class GameObject {
     _pathToSound = pathToSound;
     _flare = FlareActor("$_pathToFlr$nameOnFlareFile$_postFix",
         alignment: Alignment.center,
-        fit: BoxFit.scaleDown,
+        fit: BoxFit.contain,
         animation: _animation,
         color: null);
     _colorInfo = colorInfo;
@@ -30,7 +30,8 @@ class GameObject {
   get spokenName => _spokenName[language];
   get pathToSound => _pathToSound[language];
   get flare => _flare;
-  get colorInfo => _colorInfo;
+  get color => _colorInfo._color.withOpacity(0.5);
+  get colorStr => _colorInfo._colorStr;
   get answered => _answered;
   set answered(bool answered) => this._answered = answered;
 
@@ -57,7 +58,12 @@ class GameObject {
 }
 
 class GameObjectColor {
-  String colorStr;
-  Color color;
-  GameObjectColor({List<String> colorStr, Color color});
+  List<String> _colorStr;
+  Color _color;
+  GameObjectColor({List<String> colorStr, Color color}) {
+    _color = color;
+    _colorStr = colorStr;
+  }
+  get color => _color;
+  get colorStr => _colorStr;
 }
