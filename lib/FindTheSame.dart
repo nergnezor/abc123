@@ -1,8 +1,15 @@
 import 'dart:math';
-import 'dart:io' show Platform;
+import 'package:abc2/GameObject.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
-import 'svgs.dart';
+import 'Tts.dart';
+import 'package:abc2/GameObjectFactory.dart';
+
+List<GameObject> localGameList = GameObjectFactory.buildAnimalsList();
+
+int numberOfTargets = 1;
+int numberOfChoices = 4;
+int numberObjectsOnRow = 4;
 
 class FindTheSame extends StatefulWidget {
   //final MatchWith m;
@@ -11,61 +18,60 @@ class FindTheSame extends StatefulWidget {
   FindTheSameState createState() => FindTheSameState();
 }
 
-List<int> getTargetEmojiList(int size, int startUnicode, int randomSeed) {
-  List<int> choices = new List();
-  if (randomSeed < size) randomSeed = size;
+List<GameObject> getTargetGameObjectList(int size, int randomSeed) {
+  List<GameObject> choices = new List();
   var random = new Random();
-  for (int i = 0; i < size; ++i) {
-    //   var emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
-    //   while (choices.containsKey(emoji))
-    //     emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
-    //   choices[emoji] = Colors.green;
 
-    choices.add(random.nextInt(randomSeed));
+  for (int i = 0; i < size; ++i) {
+    choices.add(localGameList[random.nextInt(randomSeed)]);
   }
+
   return choices;
 }
 
-List<int> getRandomEmojiList(int size, int startUnicode, int randomSeed) {
-  List<int> choices = new List();
-  if (randomSeed < size) randomSeed = size;
+List<GameObject> getRandomGameObjectsList(int size, int randomSeed) {
+  List<GameObject> choices = new List();
+  choices.addAll(targetObject);
+
   var random = new Random();
-  for (int i = 0; i < size; ++i) {
-    //   var emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
-    //   while (choices.containsKey(emoji))
-    //     emoji = String.fromCharCode(startUnicode + random.nextInt(randomSeed));
-    //   choices[emoji] = Colors.green;
-    int seed = random.nextInt(randomSeed);
-    if (!targetObject.contains(seed) || choices.contains(seed)) {
-      choices.add(seed);
-    } else {
-      i--;
+  while (choices.length < size) {
+    GameObject seedObject = localGameList[random.nextInt(randomSeed)];
+    if (!targetObject.contains(seedObject) && !choices.contains(seedObject)) {
+      choices.add(seedObject);
     }
   }
-  choices.add(targetObject[0]);
+
   return choices;
 }
 
 enum MatchWith { emoji, letters }
-List<int> targetObject;
+List<GameObject> targetObject;
+List<GameObject> choices;
 
 class FindTheSameState extends State<FindTheSame> {
   /// Map to keep track of score
   // final Map<String, bool> score = {};
-  final int startUnicode = 0x1F400;
   final double fontSizeOfTarget = 200;
-  List<int> choices;
-
+  GameObjectFactory gf = GameObjectFactory();
   FindTheSameState() {
     generateTargetAndCoices();
   }
+  @override
+  void initState() {
+    Tts.speak("Hitta lika! Klicka på djuret som det finns två av");
+
+    super.initState();
+  }
 
   void generateTargetAndCoices() {
-    targetObject = getTargetEmojiList(1, 0x1F400, 60);
-    choices = getRandomEmojiList(6, 0x1F400, 60);
+    localGameList = GameObjectFactory.buildAnimalsList();
+    targetObject =
+        getTargetGameObjectList(numberOfTargets, localGameList.length);
+    choices = getRandomGameObjectsList(numberOfChoices, localGameList.length);
   }
 
   final Map<int, bool> score = {};
+  int rightChoices = 0;
 
   final fruitSuccessSounds = [
     'audio/mmm-1.wav',
@@ -81,7 +87,7 @@ class FindTheSameState extends State<FindTheSame> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[300],
-        title: Text('Score ${score.length} /' + targetObject.length.toString()),
+        title: Text('Score: $rightChoices'),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.refresh),
@@ -110,18 +116,47 @@ class FindTheSameState extends State<FindTheSame> {
                       // mainAxisAlignment: MainAxisAlignment.spaceAround,
                       // crossAxisAlignment: CrossAxisAlignment.end,
                       // children: targetObject.map((i) {
-                      SVGs.painters[1]),
+                      //SVGs.painters[0]),
+                      targetObject[0].flare),
               // }).toList()),
 
               Expanded(
                 child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 6,
+                  shrinkWrap: false,
+                  crossAxisCount: ((numberOfChoices % numberObjectsOnRow) +
+                      numberObjectsOnRow),
                   //maxCrossAxisExtent: _dimension,
                   padding: const EdgeInsets.all(4.0),
                   mainAxisSpacing: 4.0,
                   crossAxisSpacing: 4.0,
-                  children: SVGs.painters.getRange(0, 6).toList(),
+                  children: //[choices[0].flare],
+                      List.generate(numberOfChoices, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        print(choices[index].name);
+                        // if (choices[index].answered) return;
+                        if (choices[index].name == targetObject[0].name) {
+                          choices[index].answered = true;
+                          rightChoices++;
+                          Tts.speak(
+                              "Bra! Det är ${choices[index].spokenName}.");
+                          setState(() {
+                            generateTargetAndCoices();
+                          });
+                        } else {
+                          setState(() {
+                            rightChoices = 0;
+                          });
+
+                          Tts.speak("Nej det är inte samma");
+                        }
+                      },
+                      child: Container(
+                        child: choices[index].flare,
+                      ),
+                    );
+                  })
+                        ..shuffle(Random(seed++)), //[choices[0].flare],
                   childAspectRatio: 1.0,
                 ),
               ),
@@ -152,7 +187,7 @@ class FindTheSameState extends State<FindTheSame> {
     );
   }
 
-  var _dimension = 400.0;
+  //var _dimension = 400.0;
   /* @override
   Widget build(BuildContext context) {
     if (_dimension > MediaQuery.of(context).size.width - 10.0) {
@@ -189,33 +224,6 @@ class FindTheSameState extends State<FindTheSame> {
     );
   }*/
 
-  String getCharacter(int i) => String.fromCharCode(startUnicode + i);
-
-  Widget _buildDragTarget(i) {
-    return DragTarget<String>(
-      builder: (BuildContext context, List<String> incoming, List rejected) {
-        try {
-          if (Platform.isAndroid || Platform.isIOS)
-            return Emoji(emoji: getCharacter(i));
-          /*,ColorFiltered(
-              child: Emoji(emoji: getCharacter(i)),
-              colorFilter: ColorFilter.mode(Colors.black,
-                  score[i] == true ? BlendMode.clear : BlendMode.srcIn),
-            );*/
-        } catch (e) {}
-        return Container(color: Colors.grey, height: 80, width: 80);
-      },
-      onWillAccept: (data) => data == getCharacter(i),
-      onAccept: (data) {
-        setState(() {
-          score[i] = true;
-          plyr.play(fruitSuccessSounds[
-              new Random().nextInt(fruitSuccessSounds.length)]);
-        });
-      },
-      onLeave: (data) {},
-    );
-  }
 }
 
 class Emoji extends StatelessWidget {

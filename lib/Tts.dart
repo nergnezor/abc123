@@ -19,7 +19,7 @@ class Tts {
 
     //flutterTts.setLanguage(language)
 
-    await flutterTts.setLanguage("sv");
+    await flutterTts.setLanguage("en");
 
     if (!kIsWeb) {
       if (Platform.isAndroid) {

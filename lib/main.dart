@@ -131,9 +131,9 @@ initMusic() async {
 
   //plyr.clear('audio/backgorundMusic.mp3');
   //if (isBackgroundMusicPlaying) return;
-  //advancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.1);
+  //eadvancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.1);
   isBackgroundMusicPlaying = true;
-  Tts.speak("Next! Find the cat");
+  Tts.speak("Hej");
 }
 
 bool isBackgroundMusicPlaying = false;
@@ -147,7 +147,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   FlareActor character = new FlareActor(
-    "assets/animations/Robbo.flr",
+    "assets/animations/animals/Lion.flr",
     alignment: Alignment.center,
     fit: BoxFit.fitWidth,
     animation: "Wave",
