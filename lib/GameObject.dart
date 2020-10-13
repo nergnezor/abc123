@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 class GameObject {
-  ///TODO
   ///Name
-  String name;
+  List<String> name;
 
   ///Spoken name
-  String spokenName;
+  List<String> spokenName;
 
   ///Sound
   String pathToSound;
 
   ///Color
-  GameObjectColor color;
+  GameObjectColor colorInfo;
 
   ///Image (svg)
-  String pathToSVG;
+  FlareActor pathToFlare;
+
+  //Tap Functionality
+  //GestureDetector gd;
+
+  GameObject(this.name, this.spokenName, this.pathToFlare, this.colorInfo,
+      this.pathToSound);
 }
 
 class GameObjectColor {
   String colorStr;
   Colors color;
+  GameObjectColor(this.colorStr, this.color);
 }

@@ -4,11 +4,11 @@ import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'svgs.dart';
 
-class FindALike extends StatefulWidget {
+class FindTheSame extends StatefulWidget {
   //final MatchWith m;
   //const FindALike(this.m, {Key key}) : super(key: key);
   @override
-  FindALikeState createState() => FindALikeState();
+  FindTheSameState createState() => FindTheSameState();
 }
 
 List<int> getTargetEmojiList(int size, int startUnicode, int randomSeed) {
@@ -49,14 +49,14 @@ List<int> getRandomEmojiList(int size, int startUnicode, int randomSeed) {
 enum MatchWith { emoji, letters }
 List<int> targetObject;
 
-class FindALikeState extends State<FindALike> {
+class FindTheSameState extends State<FindTheSame> {
   /// Map to keep track of score
   // final Map<String, bool> score = {};
   final int startUnicode = 0x1F400;
   final double fontSizeOfTarget = 200;
   List<int> choices;
 
-  FindALikeState() {
+  FindTheSameState() {
     generateTargetAndCoices();
   }
 
@@ -76,7 +76,7 @@ class FindALikeState extends State<FindALike> {
   // Random seed to shuffle order of items.
   int seed = 0;
 
-  /*@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -105,23 +105,26 @@ class FindALikeState extends State<FindALike> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: targetObject.map((i) {
-                    return Draggable<String>(
-                      data: getCharacter(i),
-                      child: Emoji(
-                          emoji: score[i] == true ? '✅' : getCharacter(i),
-                          fontSize: fontSizeOfTarget),
-                      feedback: Emoji(
-                          emoji: getCharacter(i), fontSize: fontSizeOfTarget),
-                      childWhenDragging: Emoji(
-                        emoji: '🌱',
-                        fontSize: fontSizeOfTarget,
-                      ),
-                    );
-                  }).toList()),
+              Expanded(
+                  child:
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      // crossAxisAlignment: CrossAxisAlignment.end,
+                      // children: targetObject.map((i) {
+                      SVGs.painters[1]),
+              // }).toList()),
+
+              Expanded(
+                child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 6,
+                  //maxCrossAxisExtent: _dimension,
+                  padding: const EdgeInsets.all(4.0),
+                  mainAxisSpacing: 4.0,
+                  crossAxisSpacing: 4.0,
+                  children: SVGs.painters.getRange(0, 6).toList(),
+                  childAspectRatio: 1.0,
+                ),
+              ),
               /*SizedBox(
                 width: 450,
                 height: 450,
@@ -147,9 +150,10 @@ class FindALikeState extends State<FindALike> {
         ),
       ),
     );
-  }*/
-  var _dimension = 800.0;
-  @override
+  }
+
+  var _dimension = 400.0;
+  /* @override
   Widget build(BuildContext context) {
     if (_dimension > MediaQuery.of(context).size.width - 10.0) {
       _dimension = MediaQuery.of(context).size.width - 10.0;
@@ -170,9 +174,10 @@ class FindALikeState extends State<FindALike> {
                   setState(() => _dimension = val);
                 }),
             Expanded(
-              child: GridView.extent(
+              child: GridView.count(
                 shrinkWrap: true,
-                maxCrossAxisExtent: _dimension,
+                crossAxisCount: 8 ,
+                //maxCrossAxisExtent: _dimension,
                 padding: const EdgeInsets.all(4.0),
                 mainAxisSpacing: 4.0,
                 crossAxisSpacing: 4.0,
@@ -182,7 +187,7 @@ class FindALikeState extends State<FindALike> {
             ),
           ]),
     );
-  }
+  }*/
 
   String getCharacter(int i) => String.fromCharCode(startUnicode + i);
 

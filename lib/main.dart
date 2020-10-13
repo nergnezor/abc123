@@ -1,5 +1,6 @@
 //import 'dart:ffi';
 
+import 'package:abc2/FindTheSame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audio_cache.dart';
@@ -7,15 +8,15 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'Tts.dart';
 import 'svgs.dart';
-import 'FindAlike.dart';
+import 'FindTheSame.dart';
 
 void main() => runApp(MyApp());
 //void main() => runApp(MyHomePage());
 
 class MyApp extends StatelessWidget {
   MyApp() {
-    Tts tts = Tts();
-    SVGs svgs = SVGs();
+    Tts();
+    SVGs();
   }
   // This widget is the root of your application.
   @override
@@ -99,7 +100,7 @@ class ABC123 extends StatelessWidget {
               //    'Match emojis'),
               //modeButton(context, FindTheMatchingFruit(MatchWith.letters),
               //'Match letters'),
-              modeButton(context, FindALike(), 'Find A Like'),
+              modeButton(context, FindTheSame(), 'Find A Like'),
               //menuButton(context, "Toggle Music"),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
