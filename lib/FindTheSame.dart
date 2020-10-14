@@ -9,12 +9,12 @@ import 'size_config.dart';
 List<GameObject> localGameList = GameObjectFactory.buildAnimalsList();
 
 int numberOfTargets = 1;
-int numberOfChoices = 6;
+int numberOfChoices = 7;
 int numberObjectsOnRow = 0;
 
 class FindTheSame extends StatefulWidget {
   //final MatchWith m;
-  //const FindALike(this.m, {Key key}) : super(key: key);
+  //const FindTheSame(this.m, {Key key}) : super(key: key);
   @override
   FindTheSameState createState() => FindTheSameState();
 }
@@ -111,75 +111,59 @@ class FindTheSameState extends State<FindTheSame> {
         ),
         child: SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
-                  height: 40 * SizeConfig.blockSizeVertical,
+                  height: (30 * SizeConfig.blockSizeVertical),
                   width: SizeConfig.screenWidth,
                   child: targetObject[0].flare),
               Container(
-                padding: EdgeInsets.fromLTRB((SizeConfig.screenWidth / 80), 0,
-                    SizeConfig.screenWidth / 80, 0),
+                color: Colors.red,
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.fromLTRB(
+                    0 /*(SizeConfig.screenWidth * 0.005)*/, 0, 0, 0),
                 child: Wrap(
-                  children: //[choices[0].flare],
-                      List.generate(numberOfChoices, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        print(choices[index].name);
-                        // if (choices[index].answered) return;
-                        if (choices[index].name == targetObject[0].name) {
-                          //choices[index].answered = true;
-                          rightChoices++;
-                          Tts.speak(
-                              "Bra! Det är ${choices[index].spokenName}.");
-                          setState(() {
-                            generateTargetAndCoices();
-                          });
-                        } else {
-                          setState(() {
-                            rightChoices = 0;
-                          });
+                    alignment: WrapAlignment.spaceAround,
+                    children: //[choices[0].flare],
+                        List.generate(numberOfChoices, (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          print(choices[index].name);
+                          // if (choices[index].answered) return;
+                          if (choices[index].name == targetObject[0].name) {
+                            //choices[index].answered = true;
+                            rightChoices++;
+                            Tts.speak(
+                                "Bra! Det är ${choices[index].spokenName}.");
+                            setState(() {
+                              generateTargetAndCoices();
+                            });
+                          } else {
+                            setState(() {
+                              rightChoices = 0;
+                            });
 
-                          Tts.speak("Nej det är inte samma");
-                        }
-                      },
-                      child: Container(
-                        child: SizedBox(
-                          height: 15 * SizeConfig.blockSizeVertical,
-                          width: SizeConfig.screenWidth / (numberOfChoices) -
-                              (SizeConfig.screenWidth / (20 * numberOfChoices)),
-                          child: Card(
-                            elevation: 5.0,
-                            color: choices[index].color,
-                            child: choices[index].flare,
+                            Tts.speak("Nej det är inte samma");
+                          }
+                        },
+                        child: Container(
+                          child: SizedBox(
+                            height: (numberOfChoices < 5)
+                                ? (25 * SizeConfig.blockSizeVertical)
+                                : (35 *
+                                    SizeConfig.blockSizeVertical /
+                                    (numberOfChoices / 5)),
+                            width: SizeConfig.screenWidth / 5.61,
+                            child: Card(
+                              elevation: 5.0,
+                              color: choices[index].color,
+                              child: choices[index].flare,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  })
-                  /*..shuffle(Random(seed))*/, //[choices[0].flare],
-                ),
-
-                /*SizedBox(
-                width: 450,
-                height: 450,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-
-                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("HEJ"),
-                      Text("hej")
-                    ] /*choices.map((i) => _buildDragTarget(i)).toList()
-                      ..shuffle(Random(seed))*/
-                    ,
-                  ),
-                ),
-              )*/
+                      );
+                    })),
               )
             ],
           ),
