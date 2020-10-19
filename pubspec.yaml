@@ -50,6 +50,7 @@ flutter:
   assets:
     - assets/images/
     - assets/audio/
+    - assets/audio/AnimalSounds/
     - assets/animations/
     - assets/animations/animals/
     - assets/svg/animals/

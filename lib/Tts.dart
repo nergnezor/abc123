@@ -24,6 +24,13 @@ class Tts {
     if (!kIsWeb) {
       if (Platform.isAndroid) {
         _getEngines();
+      } else if (Platform.isIOS) {
+        await flutterTts
+            .setIosAudioCategory(IosTextToSpeechAudioCategory.playAndRecord, [
+          IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+          IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+          IosTextToSpeechAudioCategoryOptions.mixWithOthers
+        ]);
       }
     }
   }

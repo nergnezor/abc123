@@ -8,143 +8,73 @@ class GameObjectFactory {
       GameObject(
           name: ["Camel", "Kamel"],
           spokenName: ["a Camel", "en Kamel"],
-          pathToSound: "",
+          soundFilename: "",
           nameOnFlareFile: "Camel",
           colorInfo: GameObjectColor(
               colorStr: ["Yellow", "Gul"], color: Colors.yellow)),
       GameObject(
           name: ["Lion", "Lejon"],
           spokenName: ["a Lion", "ett Lejon"],
-          pathToSound: "",
+          soundFilename: "",
           nameOnFlareFile: "Lion",
           colorInfo: GameObjectColor(
               colorStr: ["Yellow", "Gul"], color: Colors.orange[400])),
       GameObject(
           name: ["Bear", "Björn"],
           spokenName: ["a Bear", "en Björn"],
-          pathToSound: "",
+          soundFilename: "",
           nameOnFlareFile: "Bear",
           colorInfo: GameObjectColor(
               colorStr: ["Brown", "Brun"], color: Colors.brown)),
       GameObject(
           name: ["Elephant", "Elefant"],
           spokenName: ["an Elephant", "en Elefant"],
-          pathToSound: "",
+          soundFilename: "",
           nameOnFlareFile: "Elephant",
           colorInfo:
               GameObjectColor(colorStr: ["Grey", "Grå"], color: Colors.grey)),
       GameObject(
           name: ["Pelican", "Pelikan"],
           spokenName: ["a Pelican", "en Pelikan"],
-          pathToSound: "",
+          soundFilename: "",
           nameOnFlareFile: "Pelican",
           colorInfo:
               GameObjectColor(colorStr: ["White", "Vit"], color: Colors.white)),
       GameObject(
           name: ["Kangaroo", "Känguru"],
-          spokenName: ["a Kangaroo", "en Känguru"],
-          pathToSound: "",
+          spokenName: ["a Kangaroo", "en Känggru"],
+          soundFilename: "",
           nameOnFlareFile: "AngryKangaroo",
           colorInfo: GameObjectColor(
               colorStr: ["Brown", "Brun"], color: Colors.brown)),
       GameObject(
           name: ["Butterfly", "Fjäril"],
           spokenName: ["a Butterfly", "en Fjäril"],
-          pathToSound: "",
+          soundFilename: "",
           nameOnFlareFile: "ButterFly",
           colorInfo: GameObjectColor(
-              colorStr: ["Yellow", "Gul"], color: Colors.orange[600])),
+              colorStr: ["Yellow", "Gul"], color: Colors.blue[600])),
       GameObject(
-          name: ["Bear", "Björn"],
-          spokenName: ["a Bear", "en Björn"],
-          pathToSound: "",
-          nameOnFlareFile: "Bear",
+          name: ["Cat", "Katt"],
+          spokenName: ["a Cat", "en Katt"],
+          soundFilename: "",
+          nameOnFlareFile: "Cat",
           colorInfo: GameObjectColor(
-              colorStr: ["Brown", "Brun"], color: Colors.brown)),
+              colorStr: ["Grey", "Grå"], color: Colors.grey[600])),
       GameObject(
-          name: ["Elephant", "Elefant"],
-          spokenName: ["an Elephant", "en Elefant"],
-          pathToSound: "",
-          nameOnFlareFile: "Elephant",
+          name: ["Dog", "Hund"],
+          spokenName: ["a Dog", "en Hund"],
+          soundFilename: "DogBark",
+          nameOnFlareFile: "Dog",
+          colorInfo: GameObjectColor(
+              colorStr: ["Orange", "Orange"], color: Colors.orange[400])),
+      GameObject(
+          name: ["Snake", "Orm"],
+          spokenName: ["a Snake", "en Orm"],
+          soundFilename: "",
+          nameOnFlareFile: "RedSnake",
           colorInfo:
-              GameObjectColor(colorStr: ["Grey", "Grå"], color: Colors.grey)),
-      GameObject(
-          name: ["Pelican", "Pelikan"],
-          spokenName: ["a Pelican", "en Pelikan"],
-          pathToSound: "",
-          nameOnFlareFile: "Pelican",
-          colorInfo:
-              GameObjectColor(colorStr: ["White", "Vit"], color: Colors.white)),
-      GameObject(
-          name: ["Camel", "Kamel"],
-          spokenName: ["a Camel", "en Kamel"],
-          pathToSound: "",
-          nameOnFlareFile: "Camel",
-          colorInfo: GameObjectColor(
-              colorStr: ["Yellow", "Gul"], color: Colors.yellow)),
-      GameObject(
-          name: ["Lion", "Lejon"],
-          spokenName: ["a Lion", "ett Lejon"],
-          pathToSound: "",
-          nameOnFlareFile: "Lion",
-          colorInfo: GameObjectColor(
-              colorStr: ["Yellow", "Gul"], color: Colors.orange[400])),
-      GameObject(
-          name: ["Bear", "Björn"],
-          spokenName: ["a Bear", "en Björn"],
-          pathToSound: "",
-          nameOnFlareFile: "Bear",
-          colorInfo: GameObjectColor(
-              colorStr: ["Brown", "Brun"], color: Colors.brown)),
-      GameObject(
-          name: ["Elephant", "Elefant"],
-          spokenName: ["an Elephant", "en Elefant"],
-          pathToSound: "",
-          nameOnFlareFile: "Elephant",
-          colorInfo:
-              GameObjectColor(colorStr: ["Grey", "Grå"], color: Colors.grey)),
-      GameObject(
-          name: ["Pelican", "Pelikan"],
-          spokenName: ["a Pelican", "en Pelikan"],
-          pathToSound: "",
-          nameOnFlareFile: "Pelican",
-          colorInfo:
-              GameObjectColor(colorStr: ["White", "Vit"], color: Colors.white)),
-      GameObject(
-          name: ["Camel", "Kamel"],
-          spokenName: ["a Camel", "en Kamel"],
-          pathToSound: "",
-          nameOnFlareFile: "Camel",
-          colorInfo: GameObjectColor(
-              colorStr: ["Yellow", "Gul"], color: Colors.yellow)),
-      GameObject(
-          name: ["Lion", "Lejon"],
-          spokenName: ["a Lion", "ett Lejon"],
-          pathToSound: "",
-          nameOnFlareFile: "Lion",
-          colorInfo: GameObjectColor(
-              colorStr: ["Yellow", "Gul"], color: Colors.orange[400])),
-      GameObject(
-          name: ["Bear", "Björn"],
-          spokenName: ["a Bear", "en Björn"],
-          pathToSound: "",
-          nameOnFlareFile: "Bear",
-          colorInfo: GameObjectColor(
-              colorStr: ["Brown", "Brun"], color: Colors.brown)),
-      GameObject(
-          name: ["Elephant", "Elefant"],
-          spokenName: ["an Elephant", "en Elefant"],
-          pathToSound: "",
-          nameOnFlareFile: "Elephant",
-          colorInfo:
-              GameObjectColor(colorStr: ["Grey", "Grå"], color: Colors.grey)),
-      GameObject(
-          name: ["Pelican", "Pelikan"],
-          spokenName: ["a Pelican", "en Pelikan"],
-          pathToSound: "",
-          nameOnFlareFile: "Pelican",
-          colorInfo:
-              GameObjectColor(colorStr: ["White", "Vit"], color: Colors.white)),
+              GameObjectColor(colorStr: ["Red", "Röd"], color: Colors.red)),
     ];
   }
 

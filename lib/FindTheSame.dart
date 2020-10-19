@@ -9,7 +9,7 @@ import 'size_config.dart';
 List<GameObject> localGameList = GameObjectFactory.buildAnimalsList();
 
 int numberOfTargets = 1;
-int numberOfChoices = 7;
+int numberOfChoices = localGameList.length;
 int numberObjectsOnRow = 0;
 
 class FindTheSame extends StatefulWidget {
@@ -20,34 +20,54 @@ class FindTheSame extends StatefulWidget {
 }
 
 List<GameObject> getTargetGameObjectList(int size, int randomSeed) {
-  List<GameObject> choices = new List();
+  List<GameObject> targetList = new List();
   var random = new Random();
 
   for (int i = 0; i < size; ++i) {
-    choices.add(localGameList[random.nextInt(randomSeed)]);
+    if (prevObject == null) {
+      targetList.add(localGameList[random.nextInt(randomSeed)]);
+    } else {
+      GameObject tempObject;
+      while (true) {
+        tempObject = localGameList[random.nextInt(randomSeed)];
+        if (!identical(prevObject.name, tempObject.name)) {
+          print(prevObject.name + " |Kommande: " + tempObject.name);
+          targetList.add(tempObject);
+          break;
+        }
+      }
+    }
   }
-
-  return choices;
+  prevObject = targetList[0];
+  return targetList;
 }
 
 List<GameObject> getRandomGameObjectsList(int size, int randomSeed) {
   List<GameObject> choices = new List();
   if (size > randomSeed) size = randomSeed;
   choices.addAll(targetObject);
+  GameObject seedObject;
 
   var random = new Random();
-  while (choices.length < size) {
-    GameObject seedObject = localGameList[random.nextInt(randomSeed)];
-    if (!targetObject.contains(seedObject) && !choices.contains(seedObject)) {
+  while ((choices.length) < size) {
+    seedObject = localGameList[random.nextInt(randomSeed)];
+    bool match = false;
+    for (int i = 0; i < choices.length; i++) {
+      if (identical(choices[i], seedObject)) {
+        match = true;
+      }
+    }
+    if (!match) {
       choices.add(seedObject);
     }
   }
 
-  return choices..shuffle(Random(randomSeed));
+  return choices..shuffle(Random(choices[0].hashCode));
 }
 
 enum MatchWith { emoji, letters }
 List<GameObject> targetObject;
+GameObject prevObject;
 List<GameObject> choices;
 
 class FindTheSameState extends State<FindTheSame> {
@@ -60,7 +80,7 @@ class FindTheSameState extends State<FindTheSame> {
   }
   @override
   void initState() {
-    Tts.speak("Hitta lika! Klicka på djuret som det finns två av");
+    Tts.speak("Hitta lika!");
 
     super.initState();
   }
@@ -70,6 +90,26 @@ class FindTheSameState extends State<FindTheSame> {
     targetObject =
         getTargetGameObjectList(numberOfTargets, localGameList.length);
     choices = getRandomGameObjectsList(numberOfChoices, localGameList.length);
+  }
+
+  addObject() {
+    if (++numberOfChoices > localGameList.length) {
+      return;
+      // numberOfChoices = localGameList.length;
+    }
+    setState(() {
+      generateTargetAndCoices();
+    });
+  }
+
+  removeObject() {
+    if (--numberOfChoices < 1) {
+      return;
+      numberOfChoices = 1;
+    }
+    setState(() {
+      generateTargetAndCoices();
+    });
   }
 
   final Map<int, bool> score = {};
@@ -103,6 +143,7 @@ class FindTheSameState extends State<FindTheSame> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: Container(
+        //width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/LandscapeBackground.jpg"),
@@ -110,105 +151,122 @@ class FindTheSameState extends State<FindTheSame> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                  height: (30 * SizeConfig.blockSizeVertical),
+          // child: Expanded(
+          child: Stack(children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Stack(children: [
+                  Center(
+                    child: SizedBox(
+                        height: (30 * SizeConfig.blockSizeVertical),
+                        width: (40 *
+                            SizeConfig
+                                .blockSizeVertical), //(30 * SizeConfig.blockSizeVertical),
+                        child: getTargetObject()),
+                  ),
+                ]),
+                Container(
                   width: SizeConfig.screenWidth,
-                  child: targetObject[0].flare),
-              Container(
-                color: Colors.red,
-                width: SizeConfig.screenWidth,
-                padding: EdgeInsets.fromLTRB(
-                    0 /*(SizeConfig.screenWidth * 0.005)*/, 0, 0, 0),
-                child: Wrap(
-                    alignment: WrapAlignment.spaceAround,
-                    children: //[choices[0].flare],
-                        List.generate(numberOfChoices, (index) {
-                      return GestureDetector(
-                        onTap: () {
-                          print(choices[index].name);
-                          // if (choices[index].answered) return;
-                          if (choices[index].name == targetObject[0].name) {
-                            //choices[index].answered = true;
-                            rightChoices++;
-                            Tts.speak(
-                                "Bra! Det är ${choices[index].spokenName}.");
-                            setState(() {
-                              generateTargetAndCoices();
-                            });
-                          } else {
-                            setState(() {
-                              rightChoices = 0;
-                            });
+                  padding: EdgeInsets.fromLTRB(
+                      0 /*(SizeConfig.screenWidth * 0.005)*/, 0, 0, 0),
+                  child: Wrap(
+                      alignment: WrapAlignment.spaceAround,
+                      children: List.generate(numberOfChoices, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            choices[index].playSound();
+                            print(choices[index].name);
+                            // if (choices[index].answered) return;
+                            if (choices[index].name == targetObject[0].name) {
+                              //choices[index].answered = true;
+                              rightChoices++;
+                              Tts.speak("${choices[index].spokenName}.");
+                              setState(() {
+                                generateTargetAndCoices();
+                              });
+                            } else {
+                              setState(() {
+                                rightChoices = 0;
+                              });
 
-                            Tts.speak("Nej det är inte samma");
-                          }
-                        },
-                        child: Container(
-                          child: SizedBox(
-                            height: (numberOfChoices < 5)
-                                ? (25 * SizeConfig.blockSizeVertical)
-                                : (35 *
-                                    SizeConfig.blockSizeVertical /
-                                    (numberOfChoices / 5)),
-                            width: SizeConfig.screenWidth / 5.61,
-                            child: Card(
-                              elevation: 5.0,
-                              color: choices[index].color,
-                              child: choices[index].flare,
+                              //Tts.speak("Fel");
+                            }
+                          },
+                          child: Container(
+                            child: SizedBox(
+                              height: (numberOfChoices < 5)
+                                  ? (24 * SizeConfig.blockSizeVertical)
+                                  : (29 *
+                                      SizeConfig.blockSizeVertical /
+                                      (numberOfChoices / 5)),
+                              width: SizeConfig.screenWidth / 5.61,
+                              child: Card(
+                                elevation: 5.0,
+                                color: choices[index].color,
+                                child: choices[index].flare,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    })),
-              )
-            ],
-          ),
+                        );
+                      })),
+                )
+              ],
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Row(children: [
+                IgnorePointer(
+                  ignoring: false,
+                  child: RawMaterialButton(
+                    onPressed: () {
+                      removeObject();
+                    },
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    child: Icon(
+                      Icons.remove,
+                      //size: 15.0,
+                    ),
+                    padding: EdgeInsets.all(15.0),
+                    shape: CircleBorder(),
+                  ),
+                ),
+                Container(
+                  width: 20,
+                  height: 15,
+                  child: Text("$numberOfChoices"),
+                ),
+                IgnorePointer(
+                  ignoring: false,
+                  child: RawMaterialButton(
+                    onPressed: () {
+                      addObject();
+                    },
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    child: Icon(
+                      Icons.add,
+                      // size: 15.0,
+                    ),
+                    padding: EdgeInsets.all(15.0),
+                    shape: CircleBorder(),
+                  ),
+                ),
+              ]),
+            ),
+          ]),
+          // ),
         ),
       ),
     );
   }
 
-  //var _dimension = 400.0;
-  /* @override
-  Widget build(BuildContext context) {
-    if (_dimension > MediaQuery.of(context).size.width - 10.0) {
-      _dimension = MediaQuery.of(context).size.width - 10.0;
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("SVGS"),
-      ),
-      body: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Slider(
-                min: 5.0,
-                max: MediaQuery.of(context).size.width - 10.0,
-                value: _dimension,
-                onChanged: (double val) {
-                  setState(() => _dimension = val);
-                }),
-            Expanded(
-              child: GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 8 ,
-                //maxCrossAxisExtent: _dimension,
-                padding: const EdgeInsets.all(4.0),
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
-                children: SVGs.painters.toList(),
-                childAspectRatio: 1.0,
-              ),
-            ),
-          ]),
-    );
-  }*/
-
+  getTargetObject() {
+    targetObject[0].playSound();
+    return targetObject[0].flare;
+  }
 }
 
 class Emoji extends StatelessWidget {

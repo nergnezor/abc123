@@ -132,7 +132,7 @@ initMusic() async {
   plyr.clearCache();
 
   //plyr.clear('audio/backgorundMusic.mp3');
-  //if (isBackgroundMusicPlaying) return;
+  if (isBackgroundMusicPlaying) return;
   //eadvancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.1);
   isBackgroundMusicPlaying = true;
   Tts.speak("");
