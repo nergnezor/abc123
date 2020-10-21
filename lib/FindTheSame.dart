@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'Tts.dart';
 import 'package:abc2/GameObjectFactory.dart';
 import 'size_config.dart';
+import 'package:video_player/video_player.dart';
 
 List<GameObject> localGameList = GameObjectFactory.buildAnimalsList();
 
 int numberOfTargets = 1;
 int numberOfChoices = localGameList.length;
 int numberObjectsOnRow = 0;
+bool showVideo = false;
 
 class FindTheSame extends StatefulWidget {
   //final MatchWith m;
@@ -71,10 +73,13 @@ GameObject prevObject;
 List<GameObject> choices;
 
 class FindTheSameState extends State<FindTheSame> {
+  VideoPlayerController _controller;
+
   /// Map to keep track of score
   // final Map<String, bool> score = {};
   final double fontSizeOfTarget = 200;
   GameObjectFactory gf = GameObjectFactory();
+
   FindTheSameState() {
     generateTargetAndCoices();
   }
@@ -83,6 +88,13 @@ class FindTheSameState extends State<FindTheSame> {
     Tts.speak("Hitta lika!");
 
     super.initState();
+    _controller = VideoPlayerController.network(
+        'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4')
+      ..initialize().then((_) {
+        _controller.setLooping(true);
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
   }
 
   void generateTargetAndCoices() {
@@ -105,7 +117,6 @@ class FindTheSameState extends State<FindTheSame> {
   removeObject() {
     if (--numberOfChoices < 1) {
       return;
-      numberOfChoices = 1;
     }
     setState(() {
       generateTargetAndCoices();
@@ -132,12 +143,20 @@ class FindTheSameState extends State<FindTheSame> {
         title: Text('Score: $rightChoices'),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
+        child: _controller.value.isPlaying
+            ? Icon(Icons.pause)
+            : Icon(Icons.play_arrow),
         onPressed: () {
           setState(() {
-            generateTargetAndCoices();
-            score.clear();
-            seed++;
+            if (showVideo) {
+              _controller.value.isPlaying
+                  ? _controller.pause()
+                  : _controller.play();
+            } else {
+              generateTargetAndCoices();
+              score.clear();
+              seed++;
+            }
           });
         },
       ),
@@ -221,6 +240,28 @@ class FindTheSameState extends State<FindTheSame> {
                   ignoring: false,
                   child: RawMaterialButton(
                     onPressed: () {
+                      setState(() {
+                        if (showVideo) {
+                          showVideo = false;
+                        } else {
+                          showVideo = true;
+                        }
+                      });
+                    },
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    child: Icon(
+                      Icons.video_label,
+                      // size: 15.0,
+                    ),
+                    padding: EdgeInsets.all(15.0),
+                    shape: CircleBorder(),
+                  ),
+                ),
+                IgnorePointer(
+                  ignoring: false,
+                  child: RawMaterialButton(
+                    onPressed: () {
                       removeObject();
                     },
                     elevation: 2.0,
@@ -255,6 +296,16 @@ class FindTheSameState extends State<FindTheSame> {
                   ),
                 ),
               ]),
+            ),
+            Center(
+              child: _controller.value.initialized
+                  ? ((showVideo)
+                      ? AspectRatio(
+                          aspectRatio: _controller.value.aspectRatio,
+                          child: VideoPlayer(_controller),
+                        )
+                      : Container())
+                  : Text("TEXT"),
             ),
           ]),
           // ),
