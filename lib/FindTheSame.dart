@@ -143,9 +143,11 @@ class FindTheSameState extends State<FindTheSame> {
         title: Text('Score: $rightChoices'),
       ),
       floatingActionButton: FloatingActionButton(
-        child: _controller.value.isPlaying
-            ? Icon(Icons.pause)
-            : Icon(Icons.play_arrow),
+        child: (showVideo)
+            ? ((_controller.value.isPlaying)
+                ? Icon(Icons.pause)
+                : Icon(Icons.play_arrow))
+            : Icon(Icons.refresh),
         onPressed: () {
           setState(() {
             if (showVideo) {
