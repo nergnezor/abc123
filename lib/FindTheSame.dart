@@ -6,17 +6,25 @@ import 'Tts.dart';
 import 'package:abc2/GameObjectFactory.dart';
 import 'size_config.dart';
 import 'package:video_player/video_player.dart';
+import 'CustomVideoPlayer.dart';
 
 List<GameObject> localGameList = GameObjectFactory.buildAnimalsList();
 
+//// Massa variabler som ska ordnas upp och flyttas
 int numberOfTargets = 1;
 int numberOfChoices = localGameList.length;
 int numberObjectsOnRow = 0;
 bool showVideo = false;
+bool _isPlaying = false;
 
+enum MatchWith { emoji, letters }
+List<GameObject> targetObject;
+GameObject prevObject;
+List<GameObject> choices;
+
+//////////////////
+///
 class FindTheSame extends StatefulWidget {
-  //final MatchWith m;
-  //const FindTheSame(this.m, {Key key}) : super(key: key);
   @override
   FindTheSameState createState() => FindTheSameState();
 }
@@ -67,13 +75,8 @@ List<GameObject> getRandomGameObjectsList(int size, int randomSeed) {
   return choices..shuffle(Random(choices[0].hashCode));
 }
 
-enum MatchWith { emoji, letters }
-List<GameObject> targetObject;
-GameObject prevObject;
-List<GameObject> choices;
-
 class FindTheSameState extends State<FindTheSame> {
-  VideoPlayerController _controller;
+  CustomVideoPlayer _controller = new CustomVideoPlayer("Bjorn");
 
   /// Map to keep track of score
   // final Map<String, bool> score = {};
@@ -88,15 +91,50 @@ class FindTheSameState extends State<FindTheSame> {
     Tts.speak("Hitta lika!");
 
     super.initState();
-    _controller = VideoPlayerController.network(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4')
-      ..initialize().then((_) {
-        _controller.setLooping(true);
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
+
+// This listener should be in a function
+    _controller.eventStream.listen((onData) {
+      switch ((onData).event) {
+        case Event.Play:
+          // TODO: Handle this case.
+          break;
+        case Event.Pause:
+          setState(() {
+            // Changing pause icon to play icon
+          });
+          break;
+      }
+    });
+    //getVideoController(
+    //defaultStream    "Bjorn"); // Bjorn is only used to init player at the moment
   }
 
+  /*VideoPlayerController getVideoController(String name) {
+    if (_controller != null) _controller.dispose();
+    if (name == "") name = "nosignal";
+    _controller = VideoPlayerController.asset('assets/video/sv/$name.mov')
+      ..addListener(() {
+        final bool isPlaying = _controller.value.isPlaying;
+        if (isPlaying != _isPlaying) {
+          setState(() {
+            _isPlaying = isPlaying;
+          });
+        }
+        print(
+            "Video pos: ${_controller.value.position} / ${_controller.value.duration}");
+        if (_controller.value.position == _controller.value.duration) {
+          //_controller.pause();
+        }
+      })
+      ..initialize().then((_) {
+        //_controller.setLooping(true);
+        //_controller.play();
+
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+      });
+    return _controller;
+  }
+*/
   void generateTargetAndCoices() {
     localGameList = GameObjectFactory.buildAnimalsList();
     targetObject =
@@ -144,16 +182,22 @@ class FindTheSameState extends State<FindTheSame> {
       ),
       floatingActionButton: FloatingActionButton(
         child: (showVideo)
-            ? ((_controller.value.isPlaying)
+            ? ((_controller.controller.value.isPlaying)
                 ? Icon(Icons.pause)
                 : Icon(Icons.play_arrow))
             : Icon(Icons.refresh),
         onPressed: () {
           setState(() {
             if (showVideo) {
-              _controller.value.isPlaying
-                  ? _controller.pause()
-                  : _controller.play();
+              if (_controller.controller.value.isPlaying) {
+                _controller.controller.pause();
+              } else {
+                if (_controller.controller.value.position ==
+                    _controller.controller.value.duration) {
+                  _controller.controller.seekTo(Duration.zero);
+                }
+                _controller.controller.play();
+              }
             } else {
               generateTargetAndCoices();
               score.clear();
@@ -247,6 +291,12 @@ class FindTheSameState extends State<FindTheSame> {
                           showVideo = false;
                         } else {
                           showVideo = true;
+                          // Detta ska faktoriseras bort
+                          if (_controller.controller.value.position ==
+                              _controller.controller.value.duration) {
+                            _controller.controller.seekTo(Duration.zero);
+                          }
+                          _controller.controller.play();
                         }
                       });
                     },
@@ -300,14 +350,18 @@ class FindTheSameState extends State<FindTheSame> {
               ]),
             ),
             Center(
-              child: _controller.value.initialized
-                  ? ((showVideo)
-                      ? AspectRatio(
-                          aspectRatio: _controller.value.aspectRatio,
-                          child: VideoPlayer(_controller),
-                        )
-                      : Container())
-                  : Text("TEXT"),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: _controller.controller.value.initialized
+                    ? ((showVideo)
+                        ? AspectRatio(
+                            aspectRatio:
+                                _controller.controller.value.aspectRatio,
+                            child: VideoPlayer(_controller.controller),
+                          )
+                        : Container())
+                    : Text("TEXT"),
+              ),
             ),
           ]),
           // ),
@@ -319,6 +373,18 @@ class FindTheSameState extends State<FindTheSame> {
   getTargetObject() {
     targetObject[0].playSound();
     return targetObject[0].flare;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    /*SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);*/
+    super.dispose();
   }
 }
 

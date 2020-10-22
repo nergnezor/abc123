@@ -135,7 +135,8 @@ initMusic() async {
   if (isBackgroundMusicPlaying) return;
   //eadvancedPlayer = await plyr.loop('audio/backgorundMusic.mp3', volume: 0.1);
   isBackgroundMusicPlaying = true;
-  Tts.speak("");
+  Tts.speak(
+      "Hej Erik, fixa layouten så spelobjekten skalar snyggt är du snäll. Puss puss");
 }
 
 bool isBackgroundMusicPlaying = false;

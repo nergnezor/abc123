@@ -10,6 +10,7 @@ class GameObjectFactory {
           spokenName: ["a Camel", "en Kamel"],
           soundFilename: "",
           nameOnFlareFile: "Camel",
+          videoName: ["", ""],
           colorInfo: GameObjectColor(
               colorStr: ["Yellow", "Gul"], color: Colors.yellow)),
       GameObject(
@@ -17,6 +18,7 @@ class GameObjectFactory {
           spokenName: ["a Lion", "ett Lejon"],
           soundFilename: "",
           nameOnFlareFile: "Lion",
+          videoName: ["", "Lejon"],
           colorInfo: GameObjectColor(
               colorStr: ["Yellow", "Gul"], color: Colors.orange[400])),
       GameObject(
@@ -24,6 +26,7 @@ class GameObjectFactory {
           spokenName: ["a Bear", "en Björn"],
           soundFilename: "",
           nameOnFlareFile: "Bear",
+          videoName: ["", "Bjorn"],
           colorInfo: GameObjectColor(
               colorStr: ["Brown", "Brun"], color: Colors.brown)),
       GameObject(
@@ -31,6 +34,7 @@ class GameObjectFactory {
           spokenName: ["an Elephant", "en Elefant"],
           soundFilename: "",
           nameOnFlareFile: "Elephant",
+          videoName: ["", "Elefant"],
           colorInfo:
               GameObjectColor(colorStr: ["Grey", "Grå"], color: Colors.grey)),
       GameObject(
@@ -38,6 +42,7 @@ class GameObjectFactory {
           spokenName: ["a Pelican", "en Pelikan"],
           soundFilename: "",
           nameOnFlareFile: "Pelican",
+          videoName: ["", ""],
           colorInfo:
               GameObjectColor(colorStr: ["White", "Vit"], color: Colors.white)),
       GameObject(
@@ -45,6 +50,7 @@ class GameObjectFactory {
           spokenName: ["a Kangaroo", "en Känggru"],
           soundFilename: "",
           nameOnFlareFile: "AngryKangaroo",
+          videoName: ["", ""],
           colorInfo: GameObjectColor(
               colorStr: ["Brown", "Brun"], color: Colors.brown)),
       GameObject(
@@ -52,6 +58,7 @@ class GameObjectFactory {
           spokenName: ["a Butterfly", "en Fjäril"],
           soundFilename: "",
           nameOnFlareFile: "ButterFly",
+          videoName: ["", ""],
           colorInfo: GameObjectColor(
               colorStr: ["Yellow", "Gul"], color: Colors.blue[600])),
       GameObject(
@@ -59,6 +66,7 @@ class GameObjectFactory {
           spokenName: ["a Cat", "en Katt"],
           soundFilename: "",
           nameOnFlareFile: "Cat",
+          videoName: ["", ""],
           colorInfo: GameObjectColor(
               colorStr: ["Grey", "Grå"], color: Colors.grey[600])),
       GameObject(
@@ -66,6 +74,7 @@ class GameObjectFactory {
           spokenName: ["a Dog", "en Hund"],
           soundFilename: "DogBark",
           nameOnFlareFile: "Dog",
+          videoName: ["", "Hund"],
           colorInfo: GameObjectColor(
               colorStr: ["Orange", "Orange"], color: Colors.orange[400])),
       GameObject(
@@ -73,6 +82,7 @@ class GameObjectFactory {
           spokenName: ["a Snake", "en Orm"],
           soundFilename: "",
           nameOnFlareFile: "RedSnake",
+          videoName: ["", "Orm"],
           colorInfo:
               GameObjectColor(colorStr: ["Red", "Röd"], color: Colors.red)),
     ];

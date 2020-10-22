@@ -19,6 +19,7 @@ class GameObject {
     String soundFilename,
     String nameOnFlareFile,
     GameObjectColor colorInfo,
+    List<String> videoName,
   }) {
     _name = name;
     _spokenName = spokenName;
@@ -34,6 +35,7 @@ class GameObject {
         animation: _animation,
         color: null);
     _colorInfo = colorInfo;
+    _videoName = videoName;
   }
 
   get name => _name[language];
@@ -45,6 +47,7 @@ class GameObject {
   get answered => _answered;
   get soundPlayer => _soundPlayer;
   get hasSound => _hasSound;
+  get videoName => _videoName[language];
   set answered(bool answered) => this._answered = answered;
 
   ///Name
@@ -61,6 +64,9 @@ class GameObject {
 
   ///Image (svg)
   FlareActor _flare;
+
+  //Name on video
+  List<String> _videoName;
 
   bool _answered = false;
 

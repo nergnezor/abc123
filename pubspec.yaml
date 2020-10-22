@@ -55,6 +55,8 @@ flutter:
     - assets/animations/
     - assets/animations/animals/
     - assets/svg/animals/
+    - assets/video/sv/
+    - assets/video/en/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
