@@ -82,13 +82,13 @@ class CustomVideoPlayer {
       }
     });
     _initializeVideoPlayerFuture = _controller.initialize().then((_) {
-      _controller.seekTo(newCurrentPosition);
-      _controller.play();
+      _controller.seekTo(Duration.zero);
+      //_controller.play();
     });
   }
 
   void getValuesAndPlay(String name) {
-    newCurrentPosition = _controller.value.position;
+    //newCurrentPosition = _controller.value.position;
     _startPlay(name);
     print(newCurrentPosition.toString());
   }

@@ -110,6 +110,7 @@ class FindTheSameState extends State<FindTheSame> {
     localGameList = GameObjectFactory.animals;
     targetObject =
         getTargetGameObjectList(numberOfTargets, localGameList.length);
+    targetObject[0].playSound();
     _controller?.getValuesAndPlay(targetObject[0].videoName);
     choices = getRandomGameObjectsList(numberOfChoices, localGameList.length);
   }
@@ -345,7 +346,6 @@ class FindTheSameState extends State<FindTheSame> {
   }
 
   getTargetObject() {
-    targetObject[0].playSound();
     return targetObject[0].flare;
   }
 
