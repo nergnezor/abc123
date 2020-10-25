@@ -15,7 +15,7 @@ int numberOfTargets = 1;
 int numberOfChoices = localGameList.length;
 int numberObjectsOnRow = 0;
 bool showVideo = false;
-bool _isPlaying = false;
+//bool _isPlaying = false;
 
 enum MatchWith { emoji, letters }
 List<GameObject> targetObject;
@@ -76,22 +76,21 @@ List<GameObject> getRandomGameObjectsList(int size, int randomSeed) {
 }
 
 class FindTheSameState extends State<FindTheSame> {
-  CustomVideoPlayer _controller = new CustomVideoPlayer("Bjorn");
+  CustomVideoPlayer _controller;
 
   /// Map to keep track of score
   // final Map<String, bool> score = {};
   final double fontSizeOfTarget = 200;
   GameObjectFactory gf = GameObjectFactory();
 
-  FindTheSameState() {
-    generateTargetAndCoices();
-  }
+  FindTheSameState();
+
   @override
   void initState() {
     Tts.speak("Hitta lika!");
-
+    generateTargetAndCoices();
     super.initState();
-
+    _controller = new CustomVideoPlayer(targetObject[0].videoName);
 // This listener should be in a function
     _controller.eventStream.listen((onData) {
       switch ((onData).event) {
@@ -105,40 +104,13 @@ class FindTheSameState extends State<FindTheSame> {
           break;
       }
     });
-    //getVideoController(
-    //defaultStream    "Bjorn"); // Bjorn is only used to init player at the moment
   }
 
-  /*VideoPlayerController getVideoController(String name) {
-    if (_controller != null) _controller.dispose();
-    if (name == "") name = "nosignal";
-    _controller = VideoPlayerController.asset('assets/video/sv/$name.mov')
-      ..addListener(() {
-        final bool isPlaying = _controller.value.isPlaying;
-        if (isPlaying != _isPlaying) {
-          setState(() {
-            _isPlaying = isPlaying;
-          });
-        }
-        print(
-            "Video pos: ${_controller.value.position} / ${_controller.value.duration}");
-        if (_controller.value.position == _controller.value.duration) {
-          //_controller.pause();
-        }
-      })
-      ..initialize().then((_) {
-        //_controller.setLooping(true);
-        //_controller.play();
-
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-      });
-    return _controller;
-  }
-*/
   void generateTargetAndCoices() {
-    localGameList = GameObjectFactory.buildAnimalsList();
+    localGameList = GameObjectFactory.animals;
     targetObject =
         getTargetGameObjectList(numberOfTargets, localGameList.length);
+    _controller?.getValuesAndPlay(targetObject[0].videoName);
     choices = getRandomGameObjectsList(numberOfChoices, localGameList.length);
   }
 
@@ -289,6 +261,8 @@ class FindTheSameState extends State<FindTheSame> {
                       setState(() {
                         if (showVideo) {
                           showVideo = false;
+                          _controller.controller?.pause();
+                          _controller.controller?.seekTo(Duration.zero);
                         } else {
                           showVideo = true;
                           // Detta ska faktoriseras bort
@@ -360,7 +334,7 @@ class FindTheSameState extends State<FindTheSame> {
                             child: VideoPlayer(_controller.controller),
                           )
                         : Container())
-                    : Text("TEXT"),
+                    : Container(),
               ),
             ),
           ]),

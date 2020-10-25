@@ -13,6 +13,8 @@ enum Event {
 }
 
 class CustomVideoPlayer {
+  get controller => _controller;
+
   bool _isPlaying;
 
   Stream<VideoEvent> get eventStream => _callback.stream;
@@ -39,15 +41,10 @@ class CustomVideoPlayer {
 
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
-  int _playBackTime;
+  //int _playBackTime;
 
   //The values that are passed when changing quality
   Duration newCurrentPosition;
-
-  String defaultStream =
-      'https://archive.org/download/Damas_BB_28F8B535_D_406/DaMaS.mp4';
-  String stream2 = 'https://archive.org/download/cCloud_20151126/cCloud.mp4';
-  String stream3 = 'https://archive.org/download/mblbhs/mblbhs.mp4';
 
   /*VideoPlayer() {
     _controller = VideoPlayerController.network(defaultStream);
@@ -64,33 +61,45 @@ class CustomVideoPlayer {
 
   Future<bool> _clearPrevious() async {
     await _controller?.pause();
+    await _controller.dispose();
     return true;
   }
 
   Future<void> _initializePlay(String name) async {
     _controller = VideoPlayerController.asset('assets/video/sv/$name.mov');
-    _controller.addListener(() {});
+    _controller.addListener(() {
+      final bool isPlaying = _controller.value.isPlaying;
+      if (isPlaying != _isPlaying) {
+        //s setState(() {
+        _isPlaying = isPlaying;
+        //});
+      }
+      print(
+          "Video pos: ${_controller.value.position} / ${_controller.value.duration}");
+      if (_controller.value.position >= _controller.value.duration) {
+        //_controller.pause();
+        _callback.add(VideoEvent(Event.Pause));
+      }
+    });
     _initializeVideoPlayerFuture = _controller.initialize().then((_) {
       _controller.seekTo(newCurrentPosition);
       _controller.play();
     });
   }
 
-  void _getValuesAndPlay(String name) {
+  void getValuesAndPlay(String name) {
     newCurrentPosition = _controller.value.position;
-    _startPlay('assets/video/sv/$name.mov');
+    _startPlay(name);
     print(newCurrentPosition.toString());
   }
 
   Future<void> _startPlay(String name) async {
     _initializeVideoPlayerFuture = null;
 
-    Future.delayed(const Duration(milliseconds: 200), () {
-      _clearPrevious().then((_) {
-        _initializePlay('assets/video/sv/$name.mov');
-      });
+    // Future.delayed(const Duration(milliseconds: 0), () {
+    _clearPrevious().then((_) {
+      _initializePlay(name);
     });
+    //});
   }
-
-  get controller => _controller;
 }

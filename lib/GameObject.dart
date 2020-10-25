@@ -6,6 +6,7 @@ int language = 1;
 
 class GameObject {
   static AudioCache _soundPlayer = AudioCache();
+  static String defaultVideoName = "nosignal";
   String _pathToFlr = "assets/animations/animals/";
   String _postFix = ".flr";
   String _animation = "Blink";
@@ -47,7 +48,8 @@ class GameObject {
   get answered => _answered;
   get soundPlayer => _soundPlayer;
   get hasSound => _hasSound;
-  get videoName => _videoName[language];
+  get videoName =>
+      (_videoName[language] == "") ? "nosignal" : _videoName[language];
   set answered(bool answered) => this._answered = answered;
 
   ///Name
