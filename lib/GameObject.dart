@@ -39,19 +39,6 @@ class GameObject {
     _videoName = videoName;
   }
 
-  get name => _name[language];
-  get spokenName => _spokenName[language];
-  get pathToSound => _soundFileName;
-  get flare => _flare;
-  get color => _colorInfo._color.withOpacity(0.5);
-  get colorStr => _colorInfo._colorStr;
-  get answered => _answered;
-  get soundPlayer => _soundPlayer;
-  get hasSound => _hasSound;
-  get videoName =>
-      (_videoName[language] == "") ? "nosignal" : _videoName[language];
-  set answered(bool answered) => this._answered = answered;
-
   ///Name
   List<String> _name;
 
@@ -85,9 +72,18 @@ class GameObject {
     }
   }
 
-  //Tap Functionality
-  //GestureDetector gd;
-
+  get name => _name[language];
+  get spokenName => _spokenName[language];
+  get pathToSound => _soundFileName;
+  get flare => _flare;
+  get color => _colorInfo._color.withOpacity(0.5);
+  get colorStr => _colorInfo._colorStr;
+  get answered => _answered;
+  get soundPlayer => _soundPlayer;
+  get hasSound => _hasSound;
+  get videoName =>
+      (_videoName[language] == "") ? "nosignal" : _videoName[language];
+  set answered(bool answered) => this._answered = answered;
 }
 
 class GameObjectColor {

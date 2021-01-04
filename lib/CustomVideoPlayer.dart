@@ -82,7 +82,7 @@ class CustomVideoPlayer {
       }
     });
     _initializeVideoPlayerFuture = _controller.initialize().then((_) {
-      _controller.seekTo(Duration.zero);
+      // _controller.seekTo(Duration.zero);
       //_controller.play();
     });
   }

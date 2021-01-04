@@ -7,20 +7,15 @@ import 'package:abc2/GameObjectFactory.dart';
 import 'size_config.dart';
 import 'package:video_player/video_player.dart';
 import 'CustomVideoPlayer.dart';
+//import 'package:shimmer/shimmer.dart';
+import 'virtual_keyboard.dart';
 
 List<GameObject> localGameList = GameObjectFactory.buildAnimalsList();
-
-//// Massa variabler som ska ordnas upp och flyttas
-int numberOfTargets = 1;
-int numberOfChoices = localGameList.length;
-int numberObjectsOnRow = 0;
-bool showVideo = false;
-//bool _isPlaying = false;
-
 enum MatchWith { emoji, letters }
 List<GameObject> targetObject;
 GameObject prevObject;
 List<GameObject> choices;
+AudioCache plyr = AudioCache();
 
 //////////////////
 ///
@@ -77,6 +72,23 @@ List<GameObject> getRandomGameObjectsList(int size, int randomSeed) {
 
 class FindTheSameState extends State<FindTheSame> {
   CustomVideoPlayer _controller;
+  int numberOfTargets = 1;
+  int numberOfChoices = localGameList.length;
+  int numberObjectsOnRow = 0;
+  bool showVideo = false;
+  double startPos = -3.0;
+  double endPos = 0.0;
+  Curve curve = Curves.elasticOut;
+
+  //// Massa variabler som ska ordnas upp och flyttas
+
+  String text = '';
+
+// True if shift enabled.
+  bool shiftEnabled = false;
+
+// is true will show the numeric keyboard.
+  bool isNumericMode = false;
 
   /// Map to keep track of score
   // final Map<String, bool> score = {};
@@ -87,7 +99,7 @@ class FindTheSameState extends State<FindTheSame> {
 
   @override
   void initState() {
-    Tts.speak("Hitta lika!");
+    //Tts.speak("Hitta lika!");
     generateTargetAndCoices();
     super.initState();
     _controller = new CustomVideoPlayer(targetObject[0].videoName);
@@ -104,6 +116,72 @@ class FindTheSameState extends State<FindTheSame> {
           break;
       }
     });
+  }
+
+  Widget getVirtualKeyboard() {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Text(
+            text,
+            style: Theme.of(context).textTheme.display1,
+          ),
+          SwitchListTile(
+            title: Text(
+              'Keyboard Type = ' +
+                  (isNumericMode
+                      ? 'VirtualKeyboardType.Numeric'
+                      : 'VirtualKeyboardType.Alphanumeric'),
+            ),
+            value: isNumericMode,
+            onChanged: (val) {
+              setState(() {
+                isNumericMode = val;
+              });
+            },
+          ),
+          Expanded(
+            child: Container(),
+          ),
+          Container(
+            color: Colors.white,
+            child: VirtualKeyboard(
+                height: SizeConfig.screenHeight * 0.3,
+                textColor: Colors.black,
+                type: isNumericMode
+                    ? VirtualKeyboardType.Numeric
+                    : VirtualKeyboardType.Alphanumeric,
+                alwaysCaps: true,
+                onKeyPress: _onKeyPress),
+          )
+        ],
+      ),
+    );
+  }
+
+  _onKeyPress(VirtualKeyboardKey key) {
+    if (key.keyType == VirtualKeyboardKeyType.String) {
+      text = text + (/*shiftEnabled  ? */ key.capsText /* : key.text*/);
+    } else if (key.keyType == VirtualKeyboardKeyType.Action) {
+      switch (key.action) {
+        case VirtualKeyboardKeyAction.Backspace:
+          if (text.length == 0) return;
+          text = text.substring(0, text.length - 1);
+          break;
+        case VirtualKeyboardKeyAction.Return:
+          text = text + '\n';
+          break;
+        case VirtualKeyboardKeyAction.Space:
+          text = text + key.text;
+          break;
+        case VirtualKeyboardKeyAction.Shift:
+          shiftEnabled = !shiftEnabled;
+          break;
+        default:
+      }
+    }
+    // Update the screen
+    setState(() {});
   }
 
   void generateTargetAndCoices() {
@@ -160,23 +238,21 @@ class FindTheSameState extends State<FindTheSame> {
                 : Icon(Icons.play_arrow))
             : Icon(Icons.refresh),
         onPressed: () {
-          setState(() {
-            if (showVideo) {
-              if (_controller.controller.value.isPlaying) {
-                _controller.controller.pause();
-              } else {
-                if (_controller.controller.value.position ==
-                    _controller.controller.value.duration) {
-                  _controller.controller.seekTo(Duration.zero);
-                }
-                _controller.controller.play();
-              }
+          if (showVideo) {
+            if (_controller.controller.value.isPlaying) {
+              _controller.controller.pause();
             } else {
-              generateTargetAndCoices();
-              score.clear();
-              seed++;
+              if (_controller.controller.value.position ==
+                  _controller.controller.value.duration) {
+                _controller.controller.seekTo(Duration.zero);
+              }
+              _controller.controller.play();
             }
-          });
+          } else {
+            generateTargetAndCoices();
+            score.clear();
+            seed++;
+          }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
@@ -198,11 +274,51 @@ class FindTheSameState extends State<FindTheSame> {
                 Stack(children: [
                   Center(
                     child: SizedBox(
-                        height: (30 * SizeConfig.blockSizeVertical),
-                        width: (40 *
-                            SizeConfig
-                                .blockSizeVertical), //(30 * SizeConfig.blockSizeVertical),
-                        child: getTargetObject()),
+                      height: (30 * SizeConfig.blockSizeVertical),
+                      width: (40 *
+                          SizeConfig
+                              .blockSizeVertical), //(30 * SizeConfig.blockSizeVertical),
+                      child: /*getTargetObject()*/ TweenAnimationBuilder(
+                        tween: Tween<Offset>(
+                            begin: Offset(startPos, 0), end: Offset(endPos, 0)),
+                        duration: Duration(seconds: 1),
+                        curve: curve,
+                        builder: (context, offset, child) {
+                          return FractionalTranslation(
+                            translation: offset,
+                            child: Container(
+                              width: double.infinity,
+                              child: Center(
+                                child: child,
+                              ),
+                            ),
+                          );
+                        },
+                        child: targetObject[0].flare,
+                        /*Text(
+                'animated text',
+                textScaleFactor: 3.0,
+              ),*/
+                        onEnd: () {
+                          print('onEnd');
+                          Future.delayed(
+                            Duration(milliseconds: 300),
+                            () {
+                              curve = curve == Curves.elasticOut
+                                  ? Curves.elasticIn
+                                  : Curves.elasticOut;
+                              if (startPos == -3.0) {
+                                setState(() {
+                                  print("RESET");
+                                  startPos = -3.0;
+                                  endPos = 0.0;
+                                });
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ]),
                 Container(
@@ -338,6 +454,7 @@ class FindTheSameState extends State<FindTheSame> {
                     : Container(),
               ),
             ),
+            // getVirtualKeyboard()
           ]),
           // ),
         ),
@@ -347,6 +464,11 @@ class FindTheSameState extends State<FindTheSame> {
 
   getTargetObject() {
     return targetObject[0].flare;
+    /*Shimmer.fromColors(
+        period: Duration(milliseconds: 500),
+        baseColor: Colors.black26,
+        highlightColor: Colors.red,
+        child: targetObject[0].flare);*/
   }
 
   @override
@@ -388,5 +510,3 @@ class Emoji extends StatelessWidget {
     );
   }
 }
-
-AudioCache plyr = AudioCache();
